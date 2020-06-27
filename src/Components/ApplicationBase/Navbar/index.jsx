@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import {
-  NavbarStyle,
-  NavbarAppIcon,
-  NavbarDiv,
-  NavbarItem,
-} from "./Navbar_style";
+import { NavbarStyle, NavbarDiv, NavbarItem, Logo } from "./Navbar_style";
 import ShoppingCartOutlinedIcon from "@material-ui/icons/ShoppingCartOutlined";
 import ReceiptOutlinedIcon from "@material-ui/icons/ReceiptOutlined";
 import StorageOutlinedIcon from "@material-ui/icons/StorageOutlined";
 import FaceOutlinedIcon from "@material-ui/icons/FaceOutlined";
 import AttachMoneyOutlinedIcon from "@material-ui/icons/AttachMoneyOutlined";
+import SpeedCell from "../../../Assets/logo/marca.png";
 
 const Navbar = () => {
   const [selectedMenu, setSelectedMenu] = useState("");
@@ -35,10 +31,9 @@ const Navbar = () => {
 
   return (
     <NavbarStyle>
-      <NavbarAppIcon>TBAT</NavbarAppIcon>
+      <Logo src={SpeedCell} alt="Logo" />
       <p></p>
       <NavbarDiv>
-        <div style={{ height: "100px" }} />
         <div>
           <NavbarItem
             onClick={() => onNavbarSelect("Sales")}

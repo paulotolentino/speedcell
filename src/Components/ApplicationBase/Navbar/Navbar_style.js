@@ -2,10 +2,10 @@ import styled from "styled-components";
 import { Colors } from "../../Colors";
 
 export const NavbarStyle = styled.div`
-  width: 150px;
+  width: 250px;
   background-color: ${Colors.Brand.BrandSecondary};
   z-index: 15;
-  height: 705px;
+  height: 100%;
 `;
 
 export const CenteredDataDiv = styled.div`
@@ -14,12 +14,9 @@ export const CenteredDataDiv = styled.div`
   align-self: center;
 `;
 
-export const NavbarAppIcon = styled(CenteredDataDiv)`
-  font-family: "Roboto", sans-serif;
-  font-style: italic;
-  font-weight: bold;
-  color: ${Colors.Neutral.PureWhite};
-  height: 68px;
+export const Logo = styled.img`
+  /* height: 256px; */
+  zoom: 0.1;
 `;
 
 export const NavbarDiv = styled.div`

@@ -5,9 +5,10 @@ import { Font } from "../../StyledGuide/typography";
 export const GlobalStyle = createGlobalStyle`
   body{
     font-family: ${Font.Family};
-    color: ${Colors.Neutral.DarkGray};
+    color: ${Colors.Neutral.PureBlack};
     padding: 0;
     margin: 0;
+    overflow: hidden;
   }
   div{
     -webkit-touch-callout:none;

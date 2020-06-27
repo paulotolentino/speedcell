@@ -12,6 +12,8 @@ import Body from "./Body";
 import Navbar from "../Navbar";
 import Header from "../Header";
 
+import SalesPage from "../../Sales";
+
 export default function Navigation() {
   return (
     <Router>
@@ -25,7 +27,7 @@ export default function Navigation() {
             <ContainerRender>
               <Switch>
                 <Redirect from="/" exact to="Sales" />
-                <Route path="/Sales" component={() => <div>Vendas</div>} />
+                <Route path="/Sales" component={SalesPage} />
                 <Route path="/OSs" component={() => <div>OSs</div>} />
                 <Route path="/Storage" component={() => <div>Storage</div>} />
                 <Route path="/Clients" component={() => <div>Clients</div>} />
