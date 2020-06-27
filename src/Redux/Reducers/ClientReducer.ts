@@ -1,6 +1,6 @@
 import * as actionTypes from "../Actions";
 
-interface Client {
+export interface ClientInterface {
   id: number;
   nome: string;
   cpf: number;
@@ -14,7 +14,7 @@ interface Client {
 }
 
 interface State {
-  data: Array<Client>;
+  data: Array<ClientInterface>;
 }
 
 export const initialState: State = {
