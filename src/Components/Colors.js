@@ -1,9 +1,9 @@
 export const Colors = {
   Brand: {
     BrandPrimary: "#5BB6A0",
-    BrandSecondary: "#38484f",
+    BrandSecondary: "#000",
     BrandBluePrimary: "#2D9BD7",
-    BrandHovered: "#58727d",
+    BrandHovered: "#488c7c",
   },
   Status: {
     SuccessStatus: "#5ACC63",
