@@ -8,6 +8,7 @@ import {
   NewSaleButton,
   InputSearch,
 } from "./Sales_style";
+import { Title } from "../Global";
 
 interface SalesProps {}
 
@@ -17,17 +18,22 @@ const handleSearch = (event: React.ChangeEvent<HTMLSelectElement>) => {
 };
 
 const SalesPage: React.SFC<SalesProps> = () => {
-  const SalesData = useSelector((state) => state.SalesReducer.data);
+  const sales = useSelector((state) => state.SalesReducer.data);
 
   return (
     <SalesStyle>
+      <Title>Vendas</Title>
       <SalesHeader>
         <InputSearch type="text" onChange={handleSearch} />
         <NewSaleButton onClick={() => console.log("Nova venda")}>
           Nova venda
         </NewSaleButton>
       </SalesHeader>
-      <Table sales={SalesData} />
+      {sales.length > 0 ? (
+        <Table sales={sales} />
+      ) : (
+        <span>Nenhum dado disponível</span>
+      )}
     </SalesStyle>
   );
 };

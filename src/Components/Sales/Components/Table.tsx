@@ -11,7 +11,10 @@ import {
   TableCellHeader,
   TableRowBody,
   TableCellBody,
-} from "./Table_style";
+  ActionButton,
+  GroupActionButton,
+  TableCellActionHeader,
+} from "../../Global/Table/Table_style";
 
 interface TableProps {
   sales: Array<SaleInterface>;
@@ -27,7 +30,7 @@ const TableComponent: React.SFC<TableProps> = ({ sales }) => {
             <TableCellHeader align="right">Venda</TableCellHeader>
             <TableCellHeader align="right">Cliente</TableCellHeader>
             <TableCellHeader align="right">Valor</TableCellHeader>
-            <TableCellHeader align="right">Ação</TableCellHeader>
+            <TableCellActionHeader>Ação</TableCellActionHeader>
           </TableRowHeader>
         </thead>
         <tbody>
@@ -39,7 +42,16 @@ const TableComponent: React.SFC<TableProps> = ({ sales }) => {
               <TableCellBody align="right">{sale.num_compra}</TableCellBody>
               <TableCellBody align="right">{sale.id_cliente}</TableCellBody>
               <TableCellBody align="right">{toMoney(sale.valor)}</TableCellBody>
-              <TableCellBody align="right">Ver</TableCellBody>
+              <TableCellBody>
+                <GroupActionButton>
+                  <ActionButton
+                    onClick={() => console.log(sale.id)}
+                    type="primary"
+                  >
+                    Ver
+                  </ActionButton>
+                </GroupActionButton>
+              </TableCellBody>
             </TableRowBody>
           ))}
         </tbody>
