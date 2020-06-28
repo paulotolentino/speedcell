@@ -14,9 +14,17 @@ export const CenteredDataDiv = styled.div`
   align-self: center;
 `;
 
+export const LogoDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 200px;
+`;
+
 export const Logo = styled.img`
-  /* height: 256px; */
-  zoom: 0.1;
+  /* zoom: 0.5; */
+  zoom: 0.09;
 `;
 
 export const NavbarDiv = styled.div`
