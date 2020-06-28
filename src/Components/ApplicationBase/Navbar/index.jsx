@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { NavbarStyle, NavbarDiv, NavbarItem, Logo } from "./Navbar_style";
+import {
+  NavbarStyle,
+  NavbarDiv,
+  NavbarItem,
+  Logo,
+  LogoDiv,
+} from "./Navbar_style";
 import ShoppingCartOutlinedIcon from "@material-ui/icons/ShoppingCartOutlined";
 import ReceiptOutlinedIcon from "@material-ui/icons/ReceiptOutlined";
 import StorageOutlinedIcon from "@material-ui/icons/StorageOutlined";
@@ -31,7 +37,9 @@ const Navbar = () => {
 
   return (
     <NavbarStyle>
-      <Logo src={SpeedCell} alt="Logo" />
+      <LogoDiv>
+        <Logo src={SpeedCell} alt="Logo" />
+      </LogoDiv>
       <p></p>
       <NavbarDiv>
         <div>
