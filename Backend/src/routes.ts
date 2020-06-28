@@ -13,5 +13,6 @@ routes.post("/vendas", salesController.create);
 routes.get("/produtos", productsController.index);
 routes.get("/produtos/:id", productsController.show);
 routes.post("/produtos", productsController.create);
+routes.put("/produtos/:id_produto/:id_estoque", productsController.change);
 
 export default routes;
