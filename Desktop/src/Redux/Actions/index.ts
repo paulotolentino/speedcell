@@ -1,11 +1,11 @@
 // Clients Actions
-export const LOAD_CLIENTS = "LOAD_CLIENTS";
+export const SET_CLIENTS = "SET_CLIENTS";
 
 // Sales Actions
-export const LOAD_SALES = "LOAD_SALES";
+export const SET_SALES = "SET_SALES";
 
 // Service Orders Actions
-export const LOAD_SERVICE_ORDERS = "LOAD_SERVICE_ORDERS";
+export const SET_SERVICE_ORDERS = "SET_SERVICE_ORDERS";
 
 // Storage Actions
-export const LOAD_STORAGE = "LOAD_STORAGE";
+export const SET_STORAGE = "SET_STORAGE";
