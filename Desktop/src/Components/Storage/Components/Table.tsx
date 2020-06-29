@@ -37,15 +37,23 @@ const TableComponent: React.SFC<TableProps> = ({ storage }) => {
         <tbody>
           {storage.map((product) => (
             <TableRowBody key={product.id}>
-              <TableCellBody align="left">
-                {moment(product.data).format("DD/MM/YYYY hh:mm")}
-              </TableCellBody>
-              <TableCellBody align="right">{product.num_os}</TableCellBody>
-              <TableCellBody align="right">{product.id_cliente}</TableCellBody>
+              <TableCellBody align="left">{product.nome}</TableCellBody>
               <TableCellBody align="right">
-                {toMoney(product.valor)}
+                {toMoney(product.preco_compra)}
               </TableCellBody>
-              <TableCellBody align="right">{product.status}</TableCellBody>
+              <TableCellBody align="right">
+                {toMoney(product.preco_venda)}
+              </TableCellBody>
+              <TableCellBody align="right">
+                {(
+                  (product.preco_venda / product.preco_compra - 1) *
+                  100
+                ).toFixed(2)}
+                %
+              </TableCellBody>
+              <TableCellBody align="right">
+                {moment(product.data_modificacao).format("DD/MM/YYYY hh:mm")}
+              </TableCellBody>
               <TableCellBody>
                 <GroupActionButton>
                   <ActionButton
