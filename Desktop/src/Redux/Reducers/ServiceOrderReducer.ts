@@ -64,7 +64,7 @@ export const initialState: State = {
 
 const ServiceOrdersReducer = (state: State = testData, action: any) => {
   switch (action.type) {
-    case actionTypes.LOAD_SERVICE_ORDERS:
+    case actionTypes.SET_SERVICE_ORDERS:
       return { ...state, data: action.data } as State;
     default:
       return state;

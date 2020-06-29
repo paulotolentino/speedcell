@@ -58,7 +58,7 @@ export const initialState: State = {
 
 const SalesReducer = (state: State = testData, action: any) => {
   switch (action.type) {
-    case actionTypes.LOAD_SALES:
+    case actionTypes.SET_SALES:
       return { ...state, data: action.data } as State;
     default:
       return state;

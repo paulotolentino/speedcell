@@ -23,7 +23,7 @@ export const initialState: State = {
 
 const ClientsReducer = (state: State = initialState, action: any) => {
   switch (action.type) {
-    case actionTypes.LOAD_CLIENTS:
+    case actionTypes.SET_CLIENTS:
       return { ...state, data: action.data } as State;
     default:
       return state;
