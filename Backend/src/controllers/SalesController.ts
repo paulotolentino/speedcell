@@ -35,7 +35,7 @@ interface SaleFromDB extends SalesProps {
 interface ProductsSale {
   nome_produto: Array<string>;
   preco_dia: Array<number>;
-  codigo_barras: Array<number>;
+  codigo_barras: Array<string>;
 }
 
 class SalesController {
@@ -43,9 +43,7 @@ class SalesController {
     try {
       const sales: Array<SalesProps> = await knex("venda").select("*");
 
-      const serializedSales = sales.map((item: SalesProps) => item);
-
-      return response.json(serializedSales);
+      return response.json(sales);
     } catch (err) {
       console.log(err);
     }
