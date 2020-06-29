@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+import { Request, Response, json } from "express";
 import knex from "../database/connection";
 
 interface ProductProps {
   id: number;
-  codigo_barras: number;
+  codigo_barras: string;
   preco_compra: number;
   preco_venda: number;
   nome: string;
@@ -30,9 +30,16 @@ interface NewProduct {
 class ProductsController {
   async index(request: Request, response: Response) {
     try {
-      const products: Array<ProductProps> = await knex("produto").select("*");
+      const products: Array<Omit<
+        ProductStoragedDB,
+        "id" | "id_produto" | "data_modificacao"
+      >> = await knex("produto")
+        .join("estoque", "produto.id", "=", "estoque.id_produto")
+        .select("produto.*", "estoque.quantidade");
 
-      // const serializedProducts = products.map((item: ProductProps) => item);
+      if (products.length === 0) {
+        return response.status(404).json({ message: "Products not found." });
+      }
 
       return response.json(products);
     } catch (err) {
@@ -44,7 +51,7 @@ class ProductsController {
     try {
       const { id } = request.params;
 
-      const product: Array<ProductStoragedDB> = await knex("produto")
+      const product: ProductStoragedDB = await knex("produto")
         .join("estoque", "produto.id", "=", "estoque.id_produto")
         .where("produto.id", id)
         .select(
@@ -52,10 +59,11 @@ class ProductsController {
           "estoque.id as id_estoque",
           "estoque.quantidade",
           "estoque.data_modificacao"
-        );
+        )
+        .first();
 
-      if (product.length === 0) {
-        return response.status(400).json({ message: "Product nor found." });
+      if (!product) {
+        return response.status(404).json({ message: "Product not found." });
       }
 
       return response.json(product);
@@ -87,9 +95,11 @@ class ProductsController {
         await trx.commit();
 
         return response.json({ message: "success" });
-      } catch (err1) {
-        console.log(err1);
+      } catch (error) {
+        console.log(error);
         await trx.rollback();
+
+        return response.status(400).json({ message: "failes", error });
       }
     } catch (err2) {
       console.log(err2);
@@ -124,9 +134,11 @@ class ProductsController {
         await trx.commit();
 
         return response.json({ message: "success" });
-      } catch (err1) {
-        console.log(err1);
+      } catch (error) {
+        console.log(error);
         await trx.rollback();
+
+        return response.status(400).json({ message: "failes", error });
       }
     } catch (err2) {
       console.log(err2);
