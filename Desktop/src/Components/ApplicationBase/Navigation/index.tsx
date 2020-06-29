@@ -17,6 +17,8 @@ import ServiceOrders from "../../ServiceOrders";
 import Storage from "../../Storage";
 import Clients from "../../Clients";
 
+import ProductRegisterForm from "../../Storage/Components/Form";
+
 export default function Navigation() {
   return (
     <Router>
@@ -35,6 +37,9 @@ export default function Navigation() {
                 <Route path="/Storage" component={Storage} />
                 <Route path="/Clients" component={Clients} />
                 <Route path="/Summary" component={() => <div>Summary</div>} />
+
+                {/* Other routes */}
+                <Route path="/CreateProduct" component={ProductRegisterForm} />
               </Switch>
             </ContainerRender>
           </Container>
