@@ -13,6 +13,8 @@ routes.post("/vendas", salesController.create);
 routes.get("/produtos", productsController.index);
 routes.get("/produtos/:id", productsController.show);
 routes.post("/produtos", productsController.create);
-routes.put("/produtos/:id_produto/:id_estoque", productsController.change);
+routes.put("/produtos/:id", productsController.change);
+routes.delete("/produtos/", productsController.delete);
+routes.delete("/produtos/:id", productsController.deleteOne);
 
 export default routes;
