@@ -65,7 +65,7 @@ export const ActionButton = styled.span`
     background-color: ${({ type }) =>
       type === "primary"
         ? Colors.Brand.BrandHovered
-        : Colors.Brand.BrandBluePrimary};
+        : Colors.Brand.BrandHovered};
   }
 `;
 
