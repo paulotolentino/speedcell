@@ -44,13 +44,13 @@ function createSystemTray() {
   tray = new Tray(isDev ? "public/tray.ico" : "tray.ico");
   var contextMenu = Menu.buildFromTemplate([
     {
-      label: "Abrir TBAT",
+      label: "Abrir VOEC",
       click: () => {
         mainWindow.show();
       },
     },
   ]);
-  tray.setToolTip("TBAT");
+  tray.setToolTip("VOEC");
   tray.setContextMenu(contextMenu);
 
   tray.on("double-click", () => {
