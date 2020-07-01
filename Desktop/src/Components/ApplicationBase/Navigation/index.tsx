@@ -39,7 +39,7 @@ export default function Navigation() {
                 <Route path="/Summary" component={() => <div>Summary</div>} />
 
                 {/* Other routes */}
-                <Route path="/CreateProduct" component={ProductRegisterForm} />
+                <Route path="/FormProduct" component={ProductRegisterForm} />
               </Switch>
             </ContainerRender>
           </Container>

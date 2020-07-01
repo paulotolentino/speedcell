@@ -60,7 +60,7 @@ const Navbar = () => {
           <NavbarItem
             onClick={() => onNavbarSelect("Storage")}
             isSelected={
-              selectedMenu === "Storage" || selectedMenu === "CreateProduct"
+              selectedMenu === "Storage" || selectedMenu === "FormProduct"
             }
           >
             <StorageOutlinedIcon fontSize="large" />
