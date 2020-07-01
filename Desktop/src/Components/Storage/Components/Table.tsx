@@ -1,5 +1,8 @@
 import React from "react";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import * as actions from "../../../Redux/Actions";
 
 import { ProductInterface } from "../../../Redux/Reducers/StorageReducer";
 import { toMoney } from "../../../Utils/Money";
@@ -21,6 +24,20 @@ interface TableProps {
 }
 
 const TableComponent: React.SFC<TableProps> = ({ storage }) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const dispatchProduct = (product: ProductInterface) => {
+    dispatch({
+      data: product,
+      type: actions.SET_PRODUCT,
+    });
+
+    history.push({
+      pathname: `/FormProduct`,
+    });
+  };
+
   return (
     <TableDiv>
       <Table>
@@ -31,6 +48,7 @@ const TableComponent: React.SFC<TableProps> = ({ storage }) => {
             <TableCellHeader align="right">Preço Venda</TableCellHeader>
             <TableCellHeader align="right">Margem</TableCellHeader>
             <TableCellHeader align="right">Quantidade</TableCellHeader>
+            <TableCellHeader align="right">Ultima Modificação</TableCellHeader>
             <TableCellActionHeader>Ação</TableCellActionHeader>
           </TableRowHeader>
         </thead>
@@ -51,19 +69,14 @@ const TableComponent: React.SFC<TableProps> = ({ storage }) => {
                 ).toFixed(2)}
                 %
               </TableCellBody>
+              <TableCellBody align="right">{product.quantidade}</TableCellBody>
               <TableCellBody align="right">
                 {moment(product.data_modificacao).format("DD/MM/YYYY hh:mm")}
               </TableCellBody>
               <TableCellBody>
                 <GroupActionButton>
                   <ActionButton
-                    onClick={() => console.log(product.id)}
-                    type="primary"
-                  >
-                    Ver
-                  </ActionButton>
-                  <ActionButton
-                    onClick={() => console.log(product.id)}
+                    onClick={() => dispatchProduct(product)}
                     type="secondary"
                   >
                     Editar
