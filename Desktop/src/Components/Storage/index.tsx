@@ -25,13 +25,14 @@ const handleSearch = (event: React.ChangeEvent<HTMLSelectElement>) => {
 const StoragePage: React.SFC<StorageProps> = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const storage = useSelector((state) => state.StorageReducer.data);
+  const storage = useSelector((state) => state.StorageReducer.data.storage);
 
   useEffect(() => {
     axios
       .get(`${globalUrl}/produtos`)
       .then(function (response) {
         return dispatch({
+          // handle success
           data: response.data,
           type: actions.SET_STORAGE,
         });
@@ -51,7 +52,7 @@ const StoragePage: React.SFC<StorageProps> = () => {
         <Button
           onClick={() =>
             history.push({
-              pathname: `/CreateProduct`,
+              pathname: `/FormProduct`,
             })
           }
         >
