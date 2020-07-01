@@ -35,7 +35,7 @@ class ProductsController {
         "id" | "id_produto" | "data_modificacao"
       >> = await knex("produto")
         .join("estoque", "produto.id", "=", "estoque.id_produto")
-        .select("produto.*", "estoque.quantidade");
+        .select("produto.*", "estoque.quantidade", "estoque.data_modificacao");
 
       if (products.length === 0) {
         return response.status(404).json({ message: "Products not found." });
@@ -108,7 +108,7 @@ class ProductsController {
 
   async change(request: Request, response: Response) {
     try {
-      const { id_produto, id_estoque } = request.params;
+      const { id } = request.params;
       const {
         product,
         storage,
@@ -120,13 +120,13 @@ class ProductsController {
       const trx = await knex.transaction();
 
       try {
-        await trx("produto").where("id", id_produto).update({
+        await trx("produto").where("id", id).update({
           nome: product.nome,
           preco_compra: product.preco_compra,
           preco_venda: product.preco_venda,
         });
 
-        await trx("estoque").where("id", id_estoque).update({
+        await trx("estoque").where("id_produto", id).update({
           quantidade: storage.quantidade,
           data_modificacao: storage.data_modificacao,
         });
@@ -142,6 +142,30 @@ class ProductsController {
       }
     } catch (err2) {
       console.log(err2);
+    }
+  }
+
+  async delete(request: Request, response: Response) {
+    try {
+      await knex("estoque").del();
+      await knex("produto").del();
+
+      return response.json({ message: "done" });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async deleteOne(request: Request, response: Response) {
+    try {
+      const { id } = request.params;
+
+      await knex("estoque").where("id_produto", id).del();
+      await knex("produto").where("id", id).del();
+
+      return response.json({ message: "done" });
+    } catch (err) {
+      console.log(err);
     }
   }
 }
