@@ -1,5 +1,7 @@
 // Clients Actions
 export const SET_CLIENTS = "SET_CLIENTS";
+export const CLEAN_CLIENTS = "CLEAN_CLIENTS";
+export const SET_CLIENT = "SET_CLIENT";
 
 // Sales Actions
 export const SET_SALES = "SET_SALES";
