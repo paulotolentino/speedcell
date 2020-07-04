@@ -26,19 +26,22 @@ const StoragePage: React.SFC<StorageProps> = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const storage = useSelector((state) => state.StorageReducer.data.storage);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
       .get(`${globalUrl}/produtos`)
       .then(function (response) {
+        // handle success
+        setLoading(false);
         return dispatch({
-          // handle success
           data: response.data,
           type: actions.SET_STORAGE,
         });
       })
       .catch(function (error) {
         // handle error
+        setLoading(false);
         console.log(error);
       });
     // eslint-disable-next-line
@@ -61,6 +64,8 @@ const StoragePage: React.SFC<StorageProps> = () => {
       </StorageHeader>
       {storage.length > 0 ? (
         <Table storage={storage} />
+      ) : loading ? (
+        <span>Carregando</span>
       ) : (
         <span>Nenhum dado disponível</span>
       )}
