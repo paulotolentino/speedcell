@@ -1,8 +1,9 @@
 import React from "react";
-import moment from "moment";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import * as actions from "../../../Redux/Actions";
 
 import { ClientInterface } from "../../../Redux/Reducers/ClientReducer";
-import { toMoney } from "../../../Utils/Money";
 
 import {
   TableDiv,
@@ -21,6 +22,20 @@ interface TableProps {
 }
 
 const TableComponent: React.SFC<TableProps> = ({ clients }) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const dispatchClient = (client: ClientInterface) => {
+    dispatch({
+      data: client,
+      type: actions.SET_CLIENT,
+    });
+
+    history.push({
+      pathname: `/FormClient`,
+    });
+  };
+
   return (
     <TableDiv>
       <Table>
@@ -35,25 +50,17 @@ const TableComponent: React.SFC<TableProps> = ({ clients }) => {
         <tbody>
           {clients.map((client) => (
             <TableRowBody key={client.id}>
-              <TableCellBody align="left">
-                {moment(client.nome).format("DD/MM/YYYY hh:mm")}
-              </TableCellBody>
+              <TableCellBody align="left">{client.nome}</TableCellBody>
               <TableCellBody align="right">{client.cpf}</TableCellBody>
               <TableCellBody align="right">{client.telefone}</TableCellBody>
 
               <TableCellBody>
                 <GroupActionButton>
                   <ActionButton
-                    onClick={() => console.log(client.id)}
-                    type="primary"
-                  >
-                    Ver
-                  </ActionButton>
-                  <ActionButton
-                    onClick={() => console.log(client.id)}
+                    onClick={() => dispatchClient(client)}
                     type="secondary"
                   >
-                    Editar
+                    Ver / Editar
                   </ActionButton>
                 </GroupActionButton>
               </TableCellBody>

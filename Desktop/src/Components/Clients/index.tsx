@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "../../Redux/Store";
+import { useDispatch } from "react-redux";
+import * as actions from "../../Redux/Actions";
+import axios from "axios";
+import { globalUrl } from "../../Utils/GlobalURL";
+import { useHistory } from "react-router-dom";
 
 import Table from "./Components/Table";
 import {
   ClientsStyle,
   ClientsHeader,
-  NewClientButton,
-  InputSearch,
+  Button,
+  InputText,
 } from "./Clients_style";
 import { Title } from "../Global";
 
@@ -18,19 +23,50 @@ const handleSearch = (event: React.ChangeEvent<HTMLSelectElement>) => {
 };
 
 const ClientsPage: React.SFC<ClientsProps> = () => {
-  const clients = useSelector((state) => state.ClientsReducer.data);
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const clients = useSelector((state) => state.ClientsReducer.data.clients);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios
+      .get(`${globalUrl}/clientes`)
+      .then(function (response) {
+        // handle success
+        setLoading(false);
+        return dispatch({
+          data: response.data,
+          type: actions.SET_CLIENTS,
+        });
+      })
+      .catch(function (error) {
+        // handle error
+        setLoading(false);
+        alert(error);
+        console.log(error);
+      });
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <ClientsStyle>
       <Title>Clientes</Title>
       <ClientsHeader>
-        <InputSearch type="text" onChange={handleSearch} />
-        <NewClientButton onClick={() => console.log("Cadastrar cliente")}>
+        <InputText type="text" onChange={handleSearch} />
+        <Button
+          onClick={() =>
+            history.push({
+              pathname: `/FormClient`,
+            })
+          }
+        >
           Cadastrar Cliente
-        </NewClientButton>
+        </Button>
       </ClientsHeader>
       {clients.length > 0 ? (
         <Table clients={clients} />
+      ) : loading ? (
+        <span>Carregando</span>
       ) : (
         <span>Nenhum dado disponível</span>
       )}

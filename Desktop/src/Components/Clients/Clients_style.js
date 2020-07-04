@@ -20,29 +20,58 @@ export const ClientsHeader = styled.div`
   align-items: center;
 `;
 
-export const NewClientButton = styled.div`
+export const ClientsDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  margin-bottom: 30px;
+  align-items: center;
+  ${(between) => (between ? "justify-content : space-between" : "")}
+`;
+
+export const Button = styled.div`
   width: 150px;
   height: 40px;
   border-radius: 20px;
-  background-color: ${Colors.Brand.BrandPrimary};
+  background-color:  ${({ type }) =>
+    type === "secondary" ? "#ffb759" : Colors.Brand.BrandPrimary};
+   ${({ type }) =>
+     type === "secondary"
+       ? `border: 2px solid ${Colors.Neutral.DarkGray}`
+       : ""};
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   ${Fonts.Buttons.BT1}
-  color: ${Colors.Neutral.LightGray};
+  color: ${({ type }) =>
+    type !== "secondary"
+      ? Colors.Neutral.LightGray
+      : Colors.Brand.BrandSecondary};
 
   &:hover{
-    background-color: ${Colors.Brand.BrandHovered};
+    background-color: ${({ type }) =>
+      type !== "secondary" ? Colors.Brand.BrandHovered : "#c99249"};
   }
 `;
 
-export const InputSearch = styled.input`
-  width: 300px;
-  height: 30px;
-  border-radius: 15px;
+export const InputText = styled.input`
+  width: ${({ width }) => (width ? width : "300px")};
+  height: ${({ height }) => (height ? height : "30px")};
+  border-radius: ${({ radius }) => (radius ? radius : "15px")};
   color: ${Colors.Neutral.DarkGray};
-  font-size: 18px;
+  font-size: ${({ size }) => (size ? size : "18px")};
   padding: 0px 8px;
   outline: none;
+`;
+
+export const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+export const GroupButtonFooter = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
