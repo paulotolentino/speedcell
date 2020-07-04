@@ -1,10 +1,12 @@
 import express from "express";
 import SalesController from "./controllers/SalesController";
 import ProductsController from "./controllers/ProductsController";
+import ClientsController from "./controllers/ClientsController";
 
 const routes = express.Router();
 const salesController = new SalesController();
 const productsController = new ProductsController();
+const clientsController = new ClientsController();
 
 routes.get("/vendas", salesController.index);
 routes.get("/vendas/:id", salesController.show);
@@ -16,5 +18,12 @@ routes.post("/produtos", productsController.create);
 routes.put("/produtos/:id", productsController.change);
 routes.delete("/produtos/", productsController.delete);
 routes.delete("/produtos/:id", productsController.deleteOne);
+
+routes.get("/clientes", clientsController.index);
+routes.get("/clientes/:id", clientsController.show);
+routes.post("/clientes", clientsController.create);
+routes.put("/clientes/:id", clientsController.change);
+routes.delete("/clientes/", clientsController.delete);
+routes.delete("/clientes/:id", clientsController.deleteOne);
 
 export default routes;
