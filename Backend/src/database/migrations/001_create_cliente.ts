@@ -11,6 +11,7 @@ export async function up(knex: Knex) {
     table.string("estado", 2).notNullable();
     table.string("telefone").notNullable();
     table.string("email").notNullable().unique();
+    table.date("data_criacao").notNullable();
   });
 }
 
