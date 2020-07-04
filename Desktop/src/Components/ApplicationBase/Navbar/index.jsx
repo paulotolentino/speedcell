@@ -68,7 +68,9 @@ const Navbar = () => {
           </NavbarItem>
           <NavbarItem
             onClick={() => onNavbarSelect("Clients")}
-            isSelected={selectedMenu === "Clients"}
+            isSelected={
+              selectedMenu === "Clients" || selectedMenu === "FormClient"
+            }
           >
             <FaceOutlinedIcon fontSize="large" />
             Clientes
