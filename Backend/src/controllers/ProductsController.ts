@@ -30,10 +30,9 @@ interface NewProduct {
 class ProductsController {
   async index(request: Request, response: Response) {
     try {
-      const products: Array<Omit<
-        ProductStoragedDB,
-        "id" | "id_produto" | "data_modificacao"
-      >> = await knex("produto")
+      const products: Array<Omit<ProductStoragedDB, "id_estoque">> = await knex(
+        "produto"
+      )
         .join("estoque", "produto.id", "=", "estoque.id_produto")
         .select("produto.*", "estoque.quantidade", "estoque.data_modificacao");
 
