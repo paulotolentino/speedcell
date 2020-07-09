@@ -35,7 +35,7 @@ const ClientsPage: React.SFC<ClientsProps> = () => {
         // handle success
         setLoading(false);
         return dispatch({
-          data: response.data,
+          data: response.data.clients,
           type: actions.SET_CLIENTS,
         });
       })
