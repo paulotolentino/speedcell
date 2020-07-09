@@ -15,16 +15,50 @@ interface ClientProps {
   data_criacao: Date;
 }
 
+interface Pagination {
+  total: number;
+  perPage: number;
+  offset: number;
+  nextPage: number;
+  lastPage: number;
+  currentPage: number;
+  from: number;
+  clients: ClientProps[];
+}
+
 class ClientsController {
   async index(request: Request, response: Response) {
     try {
-      const clients: Array<ClientProps> = await knex("cliente").select("*");
+      let currentPage = Number(request.params.currentPage || "1");
+      let perPage = Number(request.params.perPage || "10");
+      if (currentPage < 1) currentPage = 1;
+      const offset = (currentPage - 1) * perPage;
 
-      if (clients.length === 0) {
+      const result: Pagination = await Promise.all([
+        knex("cliente").count("id as count").first(),
+        knex("cliente")
+          .select("*")
+          .orderBy("nome")
+          .offset(offset)
+          .limit(perPage),
+      ]).then(([total, rows]) => {
+        const count = total!.count;
+        return {
+          total: Number(count),
+          perPage: perPage,
+          offset: offset,
+          nextPage: offset + rows.length,
+          lastPage: Math.ceil(Number(count) / perPage),
+          currentPage: currentPage,
+          from: offset,
+          clients: rows,
+        };
+      });
+      if (result.total === 0) {
         return response.status(404).json({ message: "Clients not found." });
       }
 
-      return response.json(clients);
+      return response.json(result);
     } catch (err) {
       console.log(err);
     }
