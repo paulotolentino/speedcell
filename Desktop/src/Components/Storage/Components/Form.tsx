@@ -3,8 +3,11 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from "../../../Redux/Store";
 import axios from "axios";
 import moment from "moment";
-import { justNumbers, numbersAndPeriod } from "../../../Utils/JustNumbers";
-import { toMoney } from "../../../Utils/Money";
+import {
+  justNumbers,
+  numbersAndPeriod,
+  toMoney,
+} from "../../../Utils/CommonFunctions";
 import {
   StorageStyle,
   StorageDiv,

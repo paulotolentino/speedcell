@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import * as actions from "../../../Redux/Actions";
 
 import { ProductInterface } from "../../../Redux/Reducers/StorageReducer";
-import { toMoney } from "../../../Utils/Money";
+import { toMoney } from "../../../Utils/CommonFunctions";
 
 import {
   TableDiv,

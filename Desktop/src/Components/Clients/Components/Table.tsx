@@ -60,7 +60,7 @@ const TableComponent: React.SFC<TableProps> = ({ clients }) => {
                     onClick={() => dispatchClient(client)}
                     type="secondary"
                   >
-                    Ver / Editar
+                    Editar
                   </ActionButton>
                 </GroupActionButton>
               </TableCellBody>

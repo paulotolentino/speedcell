@@ -2,7 +2,7 @@ import React from "react";
 import moment from "moment";
 
 import { ServiceOrderInterface } from "../../../Redux/Reducers/ServiceOrderReducer";
-import { toMoney } from "../../../Utils/Money";
+import { toMoney } from "../../../Utils/CommonFunctions";
 
 import {
   TableDiv,
