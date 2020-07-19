@@ -18,7 +18,9 @@ interface ClientProps {
 class ClientsController {
   async index(request: Request, response: Response) {
     try {
-      const clients: Array<ClientProps> = await knex("cliente").select("*");
+      const clients: Array<ClientProps> = await knex("cliente")
+        .select("*")
+        .orderBy("cliente.nome");
 
       if (clients.length === 0) {
         return response.status(404).json({ message: "Clients not found." });
@@ -36,6 +38,25 @@ class ClientsController {
 
       const client: ClientProps = await knex("cliente")
         .where("id", id)
+        .select("*")
+        .first();
+
+      if (!client) {
+        return response.status(404).json({ message: "Client not found." });
+      }
+
+      return response.json(client);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async searchByCPF(request: Request, response: Response) {
+    try {
+      const { cpf } = request.params;
+
+      const client: ClientProps = await knex("cliente")
+        .where("cpf", cpf)
         .select("*")
         .first();
 
