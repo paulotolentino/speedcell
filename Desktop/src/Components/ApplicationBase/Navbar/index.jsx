@@ -45,7 +45,7 @@ const Navbar = () => {
         <div>
           <NavbarItem
             onClick={() => onNavbarSelect("Sales")}
-            isSelected={selectedMenu === "Sales"}
+            isSelected={selectedMenu === "Sales" || selectedMenu === "FormSale"}
           >
             <ShoppingCartOutlinedIcon fontSize="large" />
             Vendas
