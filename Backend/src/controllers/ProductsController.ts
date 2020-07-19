@@ -9,7 +9,7 @@ interface ProductProps {
   nome: string;
 }
 
-interface ProductStoragedDB extends ProductProps {
+export interface ProductStoragedDB extends ProductProps {
   id_estoque: number;
   quantidade: number;
   data_modificacao: Date;
@@ -34,7 +34,8 @@ class ProductsController {
         "produto"
       )
         .join("estoque", "produto.id", "=", "estoque.id_produto")
-        .select("produto.*", "estoque.quantidade", "estoque.data_modificacao");
+        .select("produto.*", "estoque.quantidade", "estoque.data_modificacao")
+        .orderBy("produto.nome");
 
       if (products.length === 0) {
         return response.status(404).json({ message: "Products not found." });
@@ -53,6 +54,31 @@ class ProductsController {
       const product: ProductStoragedDB = await knex("produto")
         .join("estoque", "produto.id", "=", "estoque.id_produto")
         .where("produto.id", id)
+        .select(
+          "produto.*",
+          "estoque.id as id_estoque",
+          "estoque.quantidade",
+          "estoque.data_modificacao"
+        )
+        .first();
+
+      if (!product) {
+        return response.status(404).json({ message: "Product not found." });
+      }
+
+      return response.json(product);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async searchByBarCode(request: Request, response: Response) {
+    try {
+      const { codBarras } = request.params;
+
+      const product: ProductStoragedDB = await knex("produto")
+        .join("estoque", "produto.id", "=", "estoque.id_produto")
+        .where("produto.codigo_barras", codBarras)
         .select(
           "produto.*",
           "estoque.id as id_estoque",
