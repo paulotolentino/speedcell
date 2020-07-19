@@ -1,8 +1,11 @@
 import React from "react";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import * as actions from "../../../Redux/Actions";
 
-import { SaleInterface } from "../../../Redux/Reducers/SaleReducer";
-import { toMoney } from "../../../Utils/Money";
+import { ProductProps } from "../../../Redux/Reducers/SaleReducer";
+import { toMoney } from "../../../Utils/CommonFunctions";
 
 import {
   TableDiv,
@@ -17,17 +20,36 @@ import {
 } from "../../Global/Table/Table_style";
 
 interface TableProps {
-  sales: Array<SaleInterface>;
+  sales: Array<ProductProps>;
 }
 
 const TableComponent: React.SFC<TableProps> = ({ sales }) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const dispatchClient = (saleId: number) => {
+    dispatch({
+      data: saleId,
+      type: actions.SET_ID_SALE,
+    });
+
+    dispatch({
+      data: true,
+      type: actions.SET_SHOW_SALE,
+    });
+
+    history.push({
+      pathname: `/FormSale`,
+    });
+  };
+
   return (
     <TableDiv>
       <Table>
         <thead>
           <TableRowHeader>
-            <TableCellHeader align="left">Data</TableCellHeader>
-            <TableCellHeader align="right">Venda</TableCellHeader>
+            <TableCellHeader align="left">Venda</TableCellHeader>
+            <TableCellHeader align="right">Data</TableCellHeader>
             <TableCellHeader align="right">Cliente</TableCellHeader>
             <TableCellHeader align="right">Valor</TableCellHeader>
             <TableCellActionHeader>Ação</TableCellActionHeader>
@@ -36,16 +58,18 @@ const TableComponent: React.SFC<TableProps> = ({ sales }) => {
         <tbody>
           {sales.map((sale) => (
             <TableRowBody key={sale.id}>
-              <TableCellBody align="left">
+              <TableCellBody align="left"># {sale.numero_venda}</TableCellBody>
+              <TableCellBody align="right">
                 {moment(sale.data).format("DD/MM/YYYY hh:mm")}
               </TableCellBody>
-              <TableCellBody align="right">{sale.num_compra}</TableCellBody>
-              <TableCellBody align="right">{sale.id_cliente}</TableCellBody>
-              <TableCellBody align="right">{toMoney(sale.valor)}</TableCellBody>
+              <TableCellBody align="right">{sale.nome}</TableCellBody>
+              <TableCellBody align="right">
+                {toMoney(sale.valor - sale.valor_desconto)}
+              </TableCellBody>
               <TableCellBody>
                 <GroupActionButton>
                   <ActionButton
-                    onClick={() => console.log(sale.id)}
+                    onClick={() => dispatchClient(sale.id)}
                     type="primary"
                   >
                     Ver

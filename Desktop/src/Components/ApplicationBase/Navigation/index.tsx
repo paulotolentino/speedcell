@@ -19,6 +19,7 @@ import Clients from "../../Clients";
 
 import ProductRegisterForm from "../../Storage/Components/Form";
 import ClientRegisterForm from "../../Clients/Components/Form";
+import SaleRegisterForm from "../../Sales/Components/Form";
 
 export default function Navigation() {
   return (
@@ -42,6 +43,7 @@ export default function Navigation() {
                 {/* Other routes */}
                 <Route path="/FormProduct" component={ProductRegisterForm} />
                 <Route path="/FormClient" component={ClientRegisterForm} />
+                <Route path="/FormSale" component={SaleRegisterForm} />
               </Switch>
             </ContainerRender>
           </Container>
