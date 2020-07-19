@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "../../../Redux/Store";
+import { useDispatch } from "react-redux";
+import * as actions from "../../../Redux/Actions";
 import axios from "axios";
 import moment from "moment";
-import { justNumbers } from "../../../Utils/JustNumbers";
+import { justNumbers } from "../../../Utils/CommonFunctions";
 import {
   ClientsStyle,
   ClientsDiv,
@@ -19,7 +21,9 @@ interface ClientRegisterProps {}
 
 const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
   const clientsReducer = useSelector((state) => state.ClientsReducer.data);
+  const cpfSale = useSelector((state) => state.SalesReducer.data.cpfSale);
 
   const [nome, setNome] = useState<string>("");
   const [cpf, setCPF] = useState<string>("");
@@ -42,7 +46,26 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
       setUF(clientsReducer.selectedClient.estado);
       setTelefone(clientsReducer.selectedClient.telefone);
       setEmail(clientsReducer.selectedClient.email);
+    } else if (cpfSale > 0) {
+      setCPF(cpfSale.toString());
     }
+
+    return () => {
+      setNome("");
+      setCPF("");
+      setCEP("");
+      setLogradouro("");
+      setNumero("");
+      setCidade("");
+      setUF("");
+      setTelefone("");
+      setEmail("");
+      dispatch({
+        data: 0,
+        type: actions.SET_CPF_SALE,
+      });
+    };
+
     // eslint-disable-next-line
   }, []);
 
