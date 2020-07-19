@@ -8,3 +8,9 @@ export const numbersAndPeriod = (value: string) => {
     .replace(/[,]+/g, ".")
     .replace(/[^0-9.]+/g, "");
 };
+
+export const toMoney = (value: number | string) => {
+  return typeof value === "number"
+    ? `R$ ${value.toFixed(2).toString().replace(".", ",")}`
+    : value;
+};
