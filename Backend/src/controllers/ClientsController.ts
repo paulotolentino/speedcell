@@ -18,9 +18,9 @@ interface ClientProps {
 class ClientsController {
   async index(request: Request, response: Response) {
     try {
-      const clients: Array<ClientProps> = await knex("cliente")
-        .select("*")
-        .orderBy("cliente.nome");
+      const clients = await knex("cliente")
+        .select("nome", "cpf", "telefone", "id")
+        .orderBy("nome");
 
       if (clients.length === 0) {
         return response.status(404).json({ message: "Clients not found." });

@@ -8,6 +8,7 @@ interface FrontendSale {
   id_cliente: number;
   valor_desconto: number;
   data: Date;
+  forma_pagamento: string;
 }
 
 interface SalesProps extends FrontendSale {
@@ -44,7 +45,11 @@ class SalesController {
         .join("cliente", "venda.id_cliente", "=", "cliente.id")
         .join("produto_venda", "venda.id", "=", "produto_venda.id_venda")
         .select(
-          "venda.*",
+          "venda.id",
+          "venda.numero_venda",
+          "venda.data",
+          "venda.valor_desconto",
+          "venda.forma_pagamento",
           "cliente.nome",
           "cliente.cpf",
           "cliente.cep",
@@ -53,9 +58,19 @@ class SalesController {
         .where("venda.data", ">=", `${initialDate}T00:00:00`)
         .andWhere("venda.data", "<=", `${finalDate}T23:59:99`)
         .orderBy("venda.data")
-        .groupBy("venda.id");
+        .groupBy("venda.data");
 
-      return response.json(sales);
+      if (sales.length === 0) {
+        return response.status(404).json({ message: "Sales not found." });
+      }
+
+      const newSales = sales.map((sale) => {
+        let val = sale.valor;
+        delete sale.valor;
+        return { ...sale, valor_descontado: val - sale.valor_desconto };
+      });
+
+      return response.json(newSales);
     } catch (err) {
       console.log(err);
     }
@@ -67,13 +82,25 @@ class SalesController {
 
       const sale: SaleFromDB = await knex("venda")
         .join("cliente", "venda.id_cliente", "=", "cliente.id")
+        .join("produto_venda", "venda.id", "=", "produto_venda.id_venda")
         .where("venda.id", id)
-        .select("venda.*", "cliente.nome", "cliente.cpf", "cliente.cep")
+        .select(
+          "venda.*",
+          "cliente.nome",
+          "cliente.cpf",
+          "cliente.cep",
+          knex.raw("SUM(produto_venda.preco_dia) as valor")
+        )
         .first();
 
       if (!sale) {
         return response.status(400).json({ message: "Sale nor found." });
       }
+
+      const newSales = {
+        ...sale,
+        valor_descontado: sale.valor - sale.valor_desconto,
+      };
 
       const items: Array<ProductStoragedDB> = await knex("produto")
         .join("produto_venda", "produto.id", "=", "produto_venda.id_produto")
@@ -90,7 +117,7 @@ class SalesController {
         )
         .orderBy("produto.nome");
 
-      return response.json({ sale, items });
+      return response.json({ sale: newSales, items });
     } catch (err) {
       console.log(err);
     }
@@ -98,7 +125,7 @@ class SalesController {
 
   async getNumMax(request: Request, response: Response) {
     try {
-      const count = await knex("venda").count("* as count").first();
+      const count = await knex("venda").max("numero_venda as count").first();
 
       if (!count) {
         return response.status(400).json({ message: "Error." });
@@ -147,6 +174,40 @@ class SalesController {
       }
     } catch (err2) {
       console.log(err2);
+    }
+  }
+
+  async change(request: Request, response: Response) {
+    try {
+      const { id } = request.params;
+      const { sale }: NewSalesProps = request.body;
+
+      const trx = await knex.transaction();
+
+      try {
+        await trx("venda").where("id", id).update(sale);
+
+        await trx.commit();
+
+        return response.json({ message: "success" });
+      } catch (error) {
+        console.log(error);
+        await trx.rollback();
+
+        return response.status(400).json({ message: "failes", error });
+      }
+    } catch (err2) {
+      console.log(err2);
+    }
+  }
+
+  async delete(request: Request, response: Response) {
+    try {
+      await knex("venda").del();
+
+      return response.json({ message: "done" });
+    } catch (err) {
+      console.log(err);
     }
   }
 }

@@ -4,7 +4,7 @@ export async function up(knex: Knex) {
     table.increments("id").primary().unique();
     table.integer("numero_os").notNullable().unique();
     table.integer("id_cliente").notNullable().references("cliente.id");
-    table.string("nome_equipamento", 8);
+    table.string("nome_equipamento");
     table.string("marca");
     table.string("modelo");
     table.string("numero_serie");
@@ -19,6 +19,7 @@ export async function up(knex: Knex) {
     table.date("data_saida");
     table.decimal("valor");
     table.string("status").notNullable();
+    table.string("forma_pagamento").notNullable();
   });
 }
 

@@ -6,6 +6,7 @@ export async function up(knex: Knex) {
     table.integer("id_cliente").notNullable().references("cliente.id");
     table.decimal("valor_desconto");
     table.date("data").notNullable();
+    table.string("forma_pagamento").notNullable();
   });
 }
 
