@@ -1,6 +1,5 @@
 import express from "express";
 import routes from "./routes";
-import path from "path";
 import cors from "cors";
 
 export const globalUrl = "http://localhost:3333";
