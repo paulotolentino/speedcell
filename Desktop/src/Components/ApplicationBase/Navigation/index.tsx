@@ -16,10 +16,12 @@ import SalesPage from "../../Sales";
 import ServiceOrders from "../../ServiceOrders";
 import Storage from "../../Storage";
 import Clients from "../../Clients";
+import Summary from "../../Summary";
 
 import ProductRegisterForm from "../../Storage/Components/Form";
 import ClientRegisterForm from "../../Clients/Components/Form";
 import SaleRegisterForm from "../../Sales/Components/Form";
+import ServiceOrderRegisterForm from "../../ServiceOrders/Components/Form";
 
 export default function Navigation() {
   return (
@@ -38,12 +40,13 @@ export default function Navigation() {
                 <Route path="/OSs" component={ServiceOrders} />
                 <Route path="/Storage" component={Storage} />
                 <Route path="/Clients" component={Clients} />
-                <Route path="/Summary" component={() => <div>Summary</div>} />
+                <Route path="/Summary" component={Summary} />
 
                 {/* Other routes */}
                 <Route path="/FormProduct" component={ProductRegisterForm} />
                 <Route path="/FormClient" component={ClientRegisterForm} />
                 <Route path="/FormSale" component={SaleRegisterForm} />
+                <Route path="/FormOs" component={ServiceOrderRegisterForm} />
               </Switch>
             </ContainerRender>
           </Container>

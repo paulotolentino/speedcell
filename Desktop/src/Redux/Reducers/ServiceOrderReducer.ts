@@ -1,71 +1,91 @@
 import * as actionTypes from "../Actions";
 
+export interface ServiceOrderTableInterface {
+  id: number;
+  numero_os: number;
+  nome_equipamento: string;
+  data_entrada: Date;
+  valor: number;
+  nome: string;
+  forma_pagamento: string;
+}
 export interface ServiceOrderInterface {
   id: number;
-  num_os: number;
+  numero_os: number;
   id_cliente: number;
-  data: Date;
+  nome_equipamento: string;
+  marca: string;
+  modelo: string;
+  numero_serie: string;
+  condicoes: string;
+  defeitos: string;
+  acessorios: string;
+  solucao: string;
+  laudo_tecnico: string;
+  termo_garantia: string;
+  observacoes: string;
+  data_entrada: Date;
+  data_saida: Date;
   valor: number;
-  status: number;
+  status: string;
+  nome: string;
+  cpf: number;
+  cep: number;
+  forma_pagamento: string;
 }
 
 interface State {
-  data: Array<ServiceOrderInterface>;
+  data: {
+    serviceOrders: Array<ServiceOrderTableInterface>;
+    cpfOs: number;
+    idSelectedOs: number;
+    isShowing: boolean;
+  };
 }
 
-const testData: State = {
-  data: [
-    {
-      id: 1,
-      num_os: 112,
-      id_cliente: 3,
-      data: new Date(),
-      valor: 22.35,
-      status: 1,
-    },
-    {
-      id: 2,
-      num_os: 113,
-      id_cliente: 2,
-      data: new Date(),
-      valor: 10,
-      status: 1,
-    },
-    {
-      id: 3,
-      num_os: 114,
-      id_cliente: 1,
-      data: new Date(),
-      valor: 11.99,
-      status: 1,
-    },
-    {
-      id: 4,
-      num_os: 115,
-      id_cliente: 3,
-      data: new Date(),
-      valor: 80,
-      status: 1,
-    },
-    {
-      id: 5,
-      num_os: 116,
-      id_cliente: 1,
-      data: new Date(),
-      valor: 50,
-      status: 1,
-    },
-  ],
-};
-
 export const initialState: State = {
-  data: [],
+  data: {
+    serviceOrders: [],
+    cpfOs: 0,
+    idSelectedOs: 0,
+    isShowing: false,
+  },
 };
 
-const ServiceOrdersReducer = (state: State = testData, action: any) => {
+const ServiceOrdersReducer = (state: State = initialState, action: any) => {
   switch (action.type) {
     case actionTypes.SET_SERVICE_ORDERS:
-      return { ...state, data: action.data } as State;
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          serviceOrders: action.data,
+        },
+      } as State;
+    case actionTypes.SET_CPF_SERVICE_ORDERS:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          cpfOs: action.data,
+        },
+      } as State;
+    case actionTypes.SET_ID_SERVICE_ORDERS:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          idSelectedOs: action.data,
+        },
+      } as State;
+    case actionTypes.SET_SHOW_SERVICE_ORDERS:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          isShowing: action.data,
+        },
+      } as State;
     default:
       return state;
   }

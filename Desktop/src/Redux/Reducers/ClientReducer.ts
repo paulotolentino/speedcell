@@ -13,10 +13,17 @@ export interface ClientInterface {
   email: string;
   data_criacao: Date | null;
 }
+export interface ClientTableInterface {
+  id: number;
+  nome: string;
+  cpf: number;
+  telefone: string;
+}
 
 interface State {
   data: {
     clients: Array<ClientInterface>;
+    selectedClientId: number;
     selectedClient: ClientInterface;
     isEditing: boolean;
   };
@@ -25,18 +32,19 @@ interface State {
 export const initialState: State = {
   data: {
     clients: [],
+    selectedClientId: 0,
     selectedClient: {
-      id: 0,
-      nome: "",
-      cpf: 0,
-      email: "",
-      telefone: "",
       cep: 0,
-      logradouro: "",
-      numero: "",
       cidade: "",
-      estado: "",
+      cpf: 0,
       data_criacao: null,
+      email: "",
+      estado: "",
+      id: 0,
+      logradouro: "",
+      nome: "",
+      numero: "",
+      telefone: "",
     },
     isEditing: false,
   },
@@ -53,6 +61,11 @@ const ClientsReducer = (state: State = initialState, action: any) => {
       return {
         ...state,
         data: { ...initialState.data },
+      } as State;
+    case actionTypes.SET_CLIENT_ID:
+      return {
+        ...state,
+        data: { ...state.data, selectedClientId: action.data, isEditing: true },
       } as State;
     case actionTypes.SET_CLIENT:
       return {

@@ -6,43 +6,39 @@ import axios from "axios";
 import { globalUrl } from "../../Utils/GlobalURL";
 import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
+import { SaleProps } from "../../Redux/Reducers/SaleReducer";
 
 import Table from "./Components/Table";
 import {
-  SalesStyle,
-  SalesHeader,
-  NewSaleButton,
+  Title,
+  ComponentStyle,
+  ComponentHeader,
   InputSearch,
-} from "./Sales_style";
-import { Title } from "../Global";
+  NewSomethingButton as NewSaleButton,
+} from "../Global";
 import { Colors } from "../Colors";
 
 interface SalesProps {}
-
-const handleSearch = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  const value = event.target.value;
-  console.log(value);
-};
 
 const SalesPage: React.SFC<SalesProps> = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const reducer = useSelector((state) => state.SalesReducer.data);
   const [loading, setLoading] = useState(true);
+  const [showedSales, setShowedSales] = useState<Array<SaleProps>>([]);
 
   useEffect(() => {
     const date = new Date();
     const dateString = `${date.getFullYear()}-${(date.getMonth() + 1)
       .toString()
       .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-
-    console.log(dateString);
     axios
       .get(
         `${globalUrl}/vendas?initialDate=${dateString}&finalDate=${dateString}`
       )
       .then((response) => {
         setLoading(false);
+        setShowedSales(response.data);
         return dispatch({
           data: response.data,
           type: actions.SET_SALES,
@@ -51,9 +47,37 @@ const SalesPage: React.SFC<SalesProps> = () => {
       .catch((error) => {
         setLoading(false);
         console.log(error);
+        setShowedSales([]);
+        return dispatch({
+          data: [],
+          type: actions.SET_SALES,
+        });
       });
     // eslint-disable-next-line
   }, []);
+
+  const handleSearch = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value;
+    const sales = reducer.sales;
+
+    setShowedSales(
+      sales.filter((sale) =>
+        Object.values(sale).some((paramSale) => {
+          return String(paramSale)
+            .toLocaleLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .includes(
+              value
+                .toLocaleLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(",", ".")
+            );
+        })
+      )
+    );
+  };
 
   const searchValidCPF = (cpf: number) =>
     axios
@@ -162,20 +186,20 @@ const SalesPage: React.SFC<SalesProps> = () => {
   };
 
   return (
-    <SalesStyle>
+    <ComponentStyle>
       <Title>Vendas</Title>
-      <SalesHeader>
+      <ComponentHeader>
         <InputSearch type="text" onChange={handleSearch} />
         <NewSaleButton onClick={wantCPF}>Nova venda</NewSaleButton>
-      </SalesHeader>
-      {reducer.sales.length > 0 ? (
-        <Table sales={reducer.sales} />
+      </ComponentHeader>
+      {showedSales.length > 0 ? (
+        <Table sales={showedSales} />
       ) : loading ? (
         <span>Carregando</span>
       ) : (
         <span>Nenhum dado disponível</span>
       )}
-    </SalesStyle>
+    </ComponentStyle>
   );
 };
 

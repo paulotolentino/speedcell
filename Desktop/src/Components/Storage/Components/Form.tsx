@@ -9,14 +9,14 @@ import {
   toMoney,
 } from "../../../Utils/CommonFunctions";
 import {
-  StorageStyle,
-  StorageDiv,
+  Title,
+  ComponentStyle,
   InputText,
+  ComponentDiv,
   FormGroup,
   Button,
   GroupButtonFooter,
-} from "../Storage_style";
-import { Title } from "../../Global";
+} from "../../Global";
 import { globalUrl } from "../../../Utils/GlobalURL";
 
 interface ProductRegisterProps {}
@@ -153,14 +153,15 @@ const ProductRegisterForm: React.SFC<ProductRegisterProps> = () => {
   const goBack = () => history.goBack();
 
   return (
-    <StorageStyle>
+    <ComponentStyle>
       <Title>Estoque</Title>
-      <StorageDiv between={true}>
+      <ComponentDiv between={true}>
         <FormGroup>
           <label htmlFor="codBarras">Código de barras</label>
           <InputText
             id="codBarras"
             type="text"
+            width="250px"
             value={codBarras}
             onChange={storageReducer.isEditing ? () => {} : handlerChangeState}
           />
@@ -170,17 +171,18 @@ const ProductRegisterForm: React.SFC<ProductRegisterProps> = () => {
           <InputText
             id="produto"
             type="text"
+            width="400px"
             value={produto}
             onChange={handlerChangeState}
           />
         </FormGroup>
-      </StorageDiv>
-      <StorageDiv between={true}>
+      </ComponentDiv>
+      <ComponentDiv between={true}>
         <FormGroup>
           <label htmlFor="precoCompra">Preço de compra (R$)</label>
           <InputText
             id="precoCompra"
-            width="185px"
+            width="200px"
             type="text"
             value={precoCompra}
             onChange={handlerChangeState}
@@ -190,7 +192,7 @@ const ProductRegisterForm: React.SFC<ProductRegisterProps> = () => {
           <label htmlFor="precoVenda">Preço de venda (R$)</label>
           <InputText
             id="precoVenda"
-            width="185px"
+            width="200px"
             type="text"
             value={precoVenda}
             onChange={handlerChangeState}
@@ -200,13 +202,13 @@ const ProductRegisterForm: React.SFC<ProductRegisterProps> = () => {
           <label htmlFor="quantidade">Quantidade</label>
           <InputText
             id="quantidade"
-            width="185px"
+            width="200px"
             type="text"
             value={quantidade}
             onChange={handlerChangeState}
           />
         </FormGroup>
-      </StorageDiv>
+      </ComponentDiv>
       <GroupButtonFooter>
         <Button type="secondary" onClick={goBack}>
           Voltar
@@ -217,7 +219,7 @@ const ProductRegisterForm: React.SFC<ProductRegisterProps> = () => {
           ).format("DD/MM/YYYY hh:mm")}`}
         <Button onClick={handlerSave}>Salvar</Button>
       </GroupButtonFooter>
-    </StorageStyle>
+    </ComponentStyle>
   );
 };
 

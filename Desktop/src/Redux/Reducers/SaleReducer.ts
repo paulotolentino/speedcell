@@ -1,5 +1,5 @@
 import * as actionTypes from "../Actions";
-export interface ProductProps {
+export interface SaleProps {
   id: number;
   numero_venda: number;
   id_cliente: number;
@@ -10,11 +10,21 @@ export interface ProductProps {
   preco_venda: number;
   cep: number;
   valor: number;
+  forma_pagamento: string;
+  valor_descontado: number;
+}
+export interface SaleTableProps {
+  id: number;
+  numero_venda: number;
+  data: Date;
+  nome: string;
+  forma_pagamento: string;
+  valor_descontado: number;
 }
 
 interface State {
   data: {
-    sales: Array<ProductProps>;
+    sales: Array<SaleProps>;
     idSelectedSale: number;
     cpfSale: number;
     isShowing: boolean;

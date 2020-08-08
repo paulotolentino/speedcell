@@ -5,19 +5,18 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import moment from "moment";
 import * as actions from "../../../Redux/Actions";
-import { toMoney } from "../../../Utils/CommonFunctions";
+import { toMoney, getCurrentISODate } from "../../../Utils/CommonFunctions";
 import {
-  SalesStyle,
-  SalesDiv,
+  ComponentStyle,
+  ComponentDiv,
   InputText,
   FormGroup,
   Button,
   GroupButtonFooter,
-  SalesHeader,
-  HeaderDiv,
+  ComponentHeader,
   Deduction,
-} from "../Sales_style";
-import { Title } from "../../Global";
+  HeaderDiv,
+} from "../../Global";
 import {
   TableDiv,
   Table,
@@ -29,6 +28,7 @@ import {
   ActionButton,
   GroupActionButton,
 } from "../../Global/Table/Table_style";
+import { ObjectDiv, TitleSale, ValuesDiv } from "./Form_style";
 import { globalUrl } from "../../../Utils/GlobalURL";
 import Swal from "sweetalert2";
 import { Colors } from "../../Colors";
@@ -99,7 +99,7 @@ const SaleRegisterForm: React.SFC<SaleRegisterProps> = () => {
           setCEP(data.cep.toString());
           setCPF(cpfSale > 0 ? data.cpf.toString() : "00000000000");
           setProdutos([]);
-          setData(new Date());
+          // setData(new Date());
           setTotal(0);
         })
         .catch(function (error) {
@@ -128,6 +128,11 @@ const SaleRegisterForm: React.SFC<SaleRegisterProps> = () => {
       dispatch({
         data: 0,
         type: actions.SET_CPF_SALE,
+      });
+
+      dispatch({
+        data: 0,
+        type: actions.SET_ID_SALE,
       });
     };
     // eslint-disable-next-line
@@ -176,92 +181,118 @@ const SaleRegisterForm: React.SFC<SaleRegisterProps> = () => {
   };
 
   const handlerSave = async () => {
-    const { value } = await Swal.fire({
+    const inputOptions = ["Débito", "Crédito", "Dinheiro"];
+
+    const { value: pay } = await Swal.fire({
       icon: "info",
-      title: "Insira o valor do pagamento",
-      text: `Para pagamento, insira o valor total da venda.\n Valor da venda: R$ ${(
-        total - desconto
-      )
-        .toFixed(2)
-        .toString()
-        .replace(".", ",")}`,
-      input: "number",
+      title: "Forma de pagamento",
+      text: `Selecione a forma de pagamento`,
+      input: "radio",
       showCancelButton: true,
       focusConfirm: false,
-      confirmButtonText: "Finalizar",
+      confirmButtonText: "Seguinte",
       cancelButtonText: "Cancelar",
       confirmButtonColor: Colors.Brand.BrandPrimary,
+      inputOptions: inputOptions,
       inputValidator: (value) => {
         if (!value) {
-          return "Você deve inserir o valor do pagamento ou cancelar.";
+          return "Você deve selecionar a forma de pagamento.";
         }
         return null;
       },
     });
 
-    if (value || value === 0) {
-      console.log(1);
-      if (Number(value) < total - desconto) {
-        console.log(2);
-        Swal.fire({
-          icon: "error",
-          title: "Pagamento não realizado.",
-          text: "O valor do pagamento não pode ser menor do que o valor total.",
-          confirmButtonColor: Colors.Brand.BrandPrimary,
-        });
-        return;
-      }
-      console.log(3);
+    if (pay) {
+      const payment = inputOptions[Number(pay)];
 
-      const dataToSend = {
-        sale: {
-          numero_venda: Number(nVenda),
-          id_cliente: Number(idCliente),
-          valor_desconto: Number(desconto),
-          data: new Date().toISOString(),
-        },
-        cart: produtos.map((produto) => {
-          return {
-            id_produto: produto.id,
-            preco_dia: produto.preco_venda,
-          };
-        }),
-      };
-
-      if (!salesReducer.isShowing) {
-        console.log(4);
-        axios
-          .post(`${globalUrl}/vendas`, dataToSend)
-          .then((response) => {
-            // handle success
-            if (
-              response.status === 200 &&
-              response.data.message === "success"
-            ) {
-              console.log(5);
-              Swal.fire({
-                icon: "success",
-                title: `Venda realizada. \n Troco: R$ ${(
-                  Number(value) -
-                  (total - desconto)
-                )
-                  .toFixed(2)
-                  .toString()
-                  .replace(".", ",")}`,
-                confirmButtonColor: Colors.Brand.BrandPrimary,
-              }).then(() => goBack());
-            }
-          })
-          .catch(function (error) {
-            // handle error
-            Swal.fire({
-              icon: "error",
-              title: "Um erro ocorreu.",
-              text: "Verifique os dados inseridos.",
+      const { value } =
+        inputOptions[Number(pay)] === "Dinheiro"
+          ? await Swal.fire({
+              icon: "info",
+              title: "Insira o valor do pagamento",
+              text: `Para pagamento, insira o valor total da venda.\n Valor da venda: R$ ${(
+                total - desconto
+              )
+                .toFixed(2)
+                .toString()
+                .replace(".", ",")}`,
+              input: "number",
+              showCancelButton: true,
+              focusConfirm: false,
+              confirmButtonText: "Finalizar",
+              cancelButtonText: "Cancelar",
               confirmButtonColor: Colors.Brand.BrandPrimary,
-            });
-            console.log(error);
+              inputValidator: (value) => {
+                if (!value) {
+                  return "Você deve inserir o valor do pagamento ou cancelar.";
+                }
+                return null;
+              },
+            })
+          : { value: total - desconto };
+
+      if (value || value === 0) {
+        if (Number(value) < total - desconto) {
+          Swal.fire({
+            icon: "error",
+            title: "Pagamento não realizado.",
+            text:
+              "O valor do pagamento não pode ser menor do que o valor total.",
+            confirmButtonColor: Colors.Brand.BrandPrimary,
           });
+          return;
+        }
+
+        const dataToSend = {
+          sale: {
+            numero_venda: Number(nVenda),
+            id_cliente: Number(idCliente),
+            valor_desconto: Number(desconto),
+            data: getCurrentISODate(new Date()),
+            forma_pagamento: payment,
+          },
+          cart: produtos.map((produto) => {
+            return {
+              id_produto: produto.id,
+              preco_dia: produto.preco_venda,
+            };
+          }),
+        };
+
+        if (!salesReducer.isShowing) {
+          axios
+            .post(`${globalUrl}/vendas`, dataToSend)
+            .then((response) => {
+              // handle success
+              if (
+                response.status === 200 &&
+                response.data.message === "success"
+              ) {
+                Swal.fire({
+                  icon: "success",
+                  title: `Venda realizada.${
+                    pay === 3
+                      ? ` \n Troco: R$ ${(Number(value) - (total - desconto))
+                          .toFixed(2)
+                          .toString()
+                          .replace(".", ",")}`
+                      : ""
+                  }`,
+                  confirmButtonColor: Colors.Brand.BrandPrimary,
+                }).then(() => goBack());
+              }
+            })
+            .catch(function (error) {
+              // handle error
+              Swal.fire({
+                icon: "error",
+                title: "Um erro ocorreu.",
+                text: "Verifique os dados inseridos.",
+                confirmButtonColor: Colors.Brand.BrandPrimary,
+              });
+              console.log(error);
+            });
+        }
       }
     }
   };
@@ -327,9 +358,24 @@ const SaleRegisterForm: React.SFC<SaleRegisterProps> = () => {
   const goBack = () => history.goBack();
 
   return (
-    <SalesStyle>
-      <Title>Venda</Title>
-      <SalesHeader>
+    <ComponentStyle>
+      <ObjectDiv>
+        <TitleSale>Venda</TitleSale>
+
+        <ValuesDiv>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <span>Valor total:</span> <span>{toMoney(total)}</span>
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <span>Valor desconto:</span> <span>{toMoney(desconto)}</span>
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <span>Total com desconto:</span>{" "}
+            <span>{toMoney(total - desconto)}</span>
+          </div>
+        </ValuesDiv>
+      </ObjectDiv>
+      <ComponentHeader>
         <HeaderDiv>
           <span>CPF: {cpf}</span>
           <span>Cliente: {nomeCliente}</span>
@@ -341,17 +387,16 @@ const SaleRegisterForm: React.SFC<SaleRegisterProps> = () => {
           <span>CEP: {cep}</span>
           <span>Data: {moment(data).format("DD/MM/YYYY hh:mm")}</span>
         </HeaderDiv>
-      </SalesHeader>
+      </ComponentHeader>
       <FormGroup></FormGroup>
       <FormGroup></FormGroup>
       {!salesReducer.isShowing && (
-        <SalesDiv between={true}>
+        <ComponentDiv between={true}>
           <FormGroup>
             <label htmlFor="codBarras">Código de Barras</label>
             <InputText
               required
               autoFocus
-              disabled={salesReducer.isShowing}
               ref={inputCodBarras}
               id="codBarras"
               width="450px"
@@ -363,10 +408,10 @@ const SaleRegisterForm: React.SFC<SaleRegisterProps> = () => {
                   searchProduct();
                 }
               }}
-              onChange={salesReducer.isShowing ? () => {} : handlerChangeState}
+              onChange={handlerChangeState}
             />
           </FormGroup>
-        </SalesDiv>
+        </ComponentDiv>
       )}
       {produtos.length > 0 && (
         <TableDiv>
@@ -415,18 +460,6 @@ const SaleRegisterForm: React.SFC<SaleRegisterProps> = () => {
         <Button type="secondary" onClick={goBack}>
           Voltar
         </Button>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <span>Valor total:</span> <span>{toMoney(total)}</span>
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <span>Valor desconto:</span> <span>{toMoney(desconto)}</span>
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <span>Total com desconto:</span>{" "}
-            <span>{toMoney(total - desconto)}</span>
-          </div>
-        </div>
         {!salesReducer.isShowing && (
           <Deduction
             disabled={produtos.length === 0}
@@ -446,7 +479,7 @@ const SaleRegisterForm: React.SFC<SaleRegisterProps> = () => {
           <div />
         )}
       </GroupButtonFooter>
-    </SalesStyle>
+    </ComponentStyle>
   );
 };
 

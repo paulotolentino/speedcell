@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import * as actions from "../../../Redux/Actions";
 
-import { ClientInterface } from "../../../Redux/Reducers/ClientReducer";
+import { ClientTableInterface } from "../../../Redux/Reducers/ClientReducer";
 
 import {
   TableDiv,
@@ -18,17 +18,17 @@ import {
 } from "../../Global/Table/Table_style";
 
 interface TableProps {
-  clients: Array<ClientInterface>;
+  clients: Array<ClientTableInterface>;
 }
 
 const TableComponent: React.SFC<TableProps> = ({ clients }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const dispatchClient = (client: ClientInterface) => {
+  const dispatchClientId = (clientId: number) => {
     dispatch({
-      data: client,
-      type: actions.SET_CLIENT,
+      data: clientId,
+      type: actions.SET_CLIENT_ID,
     });
 
     history.push({
@@ -57,7 +57,7 @@ const TableComponent: React.SFC<TableProps> = ({ clients }) => {
               <TableCellBody>
                 <GroupActionButton>
                   <ActionButton
-                    onClick={() => dispatchClient(client)}
+                    onClick={() => dispatchClientId(client.id)}
                     type="secondary"
                   >
                     Editar

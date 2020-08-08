@@ -49,7 +49,7 @@ export const Fonts = {
     H6: css`
       ${_font};
       font-weight: 300;
-      font-size: 60px;
+      font-size: 20px;
       line-height: 140.62%;
       letter-spacing: 0.5px;
     `,

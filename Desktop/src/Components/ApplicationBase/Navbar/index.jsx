@@ -30,8 +30,8 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    setSelectedMenu("Sales");
-    onNavbarSelect("Sales");
+    setSelectedMenu("Summary");
+    onNavbarSelect("Summary");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -52,7 +52,7 @@ const Navbar = () => {
           </NavbarItem>
           <NavbarItem
             onClick={() => onNavbarSelect("OSs")}
-            isSelected={selectedMenu === "OSs"}
+            isSelected={selectedMenu === "OSs" || selectedMenu === "FormOs"}
           >
             <ReceiptOutlinedIcon fontSize="large" />
             OSs

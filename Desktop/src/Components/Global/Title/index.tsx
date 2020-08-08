@@ -3,7 +3,7 @@ import React from "react";
 import { StyledTitle } from "./Title_style.js";
 
 interface TitleProps {
-  children: string;
+  children: any;
 }
 
 export const Title: React.SFC<TitleProps> = ({ children }) => {

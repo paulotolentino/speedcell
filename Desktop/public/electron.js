@@ -11,7 +11,7 @@ const singleInstanceLock = app.requestSingleInstanceLock();
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1016,
+    width: 1100,
     height: 705,
     frame: false,
     resizable: false,

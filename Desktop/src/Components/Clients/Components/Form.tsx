@@ -7,14 +7,14 @@ import axios from "axios";
 import moment from "moment";
 import { justNumbers } from "../../../Utils/CommonFunctions";
 import {
-  ClientsStyle,
-  ClientsDiv,
+  ComponentStyle,
+  ComponentDiv,
   InputText,
   FormGroup,
   Button,
   GroupButtonFooter,
-} from "../Clients_style";
-import { Title } from "../../Global";
+  Title,
+} from "../../Global";
 import { globalUrl } from "../../../Utils/GlobalURL";
 
 interface ClientRegisterProps {}
@@ -34,18 +34,34 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
   const [uf, setUF] = useState<string>("");
   const [telefone, setTelefone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [dataCriacao, setDataCriacao] = useState<string>("");
 
   useEffect(() => {
     if (clientsReducer.isEditing) {
-      setNome(clientsReducer.selectedClient.nome);
-      setCPF(clientsReducer.selectedClient.cpf.toString());
-      setCEP(clientsReducer.selectedClient.cep.toString());
-      setLogradouro(clientsReducer.selectedClient.logradouro);
-      setNumero(clientsReducer.selectedClient.numero);
-      setCidade(clientsReducer.selectedClient.cidade);
-      setUF(clientsReducer.selectedClient.estado);
-      setTelefone(clientsReducer.selectedClient.telefone);
-      setEmail(clientsReducer.selectedClient.email);
+      axios
+        .get(`${globalUrl}/clientes/${clientsReducer.selectedClientId}`)
+        .then(function ({ data }) {
+          // handle success
+          setNome(data.nome);
+          setCPF(data.cpf.toString());
+          setCEP(data.cep.toString());
+          setLogradouro(data.logradouro);
+          setNumero(data.numero);
+          setCidade(data.cidade);
+          setUF(data.estado);
+          setTelefone(data.telefone);
+          setEmail(data.email);
+          setDataCriacao(data.data_criacao);
+          dispatch({
+            data: data,
+            type: actions.SET_CLIENTS,
+          });
+        })
+        .catch(function (error) {
+          // handle error
+          alert(error);
+          console.log(error);
+        });
     } else if (cpfSale > 0) {
       setCPF(cpfSale.toString());
     }
@@ -203,15 +219,15 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
   const goBack = () => history.goBack();
 
   return (
-    <ClientsStyle>
+    <ComponentStyle>
       <Title>Clientes</Title>
-      <ClientsDiv between={true}>
+      <ComponentDiv between={true}>
         <FormGroup>
           <label htmlFor="nome">Nome</label>
           <InputText
             required
             id="nome"
-            width="440px"
+            width="500px"
             type="text"
             value={nome}
             onChange={handlerChangeState}
@@ -222,21 +238,21 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
           <InputText
             required
             id="cpf"
-            width="185px"
+            width="200px"
             type="text"
             placeholder="Somente números"
             value={cpf}
             onChange={clientsReducer.isEditing ? () => {} : handlerChangeState}
           />
         </FormGroup>
-      </ClientsDiv>
-      <ClientsDiv between={true}>
+      </ComponentDiv>
+      <ComponentDiv between={true}>
         <FormGroup>
           <label htmlFor="email">Email</label>
           <InputText
             required
             id="email"
-            width="440px"
+            width="500px"
             type="text"
             value={email}
             onChange={handlerChangeState}
@@ -247,20 +263,20 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
           <InputText
             required
             id="telefone"
-            width="185px"
+            width="200px"
             type="text"
             value={telefone}
             onChange={handlerChangeState}
           />
         </FormGroup>
-      </ClientsDiv>
-      <ClientsDiv between={true}>
+      </ComponentDiv>
+      <ComponentDiv between={true}>
         <FormGroup>
           <label htmlFor="cep">CEP</label>
           <InputText
             required
             id="cep"
-            width="185px"
+            width="200px"
             type="text"
             placeholder="Somente números"
             value={cep}
@@ -272,20 +288,20 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
           <InputText
             required
             id="logradouro"
-            width="440px"
+            width="500px"
             type="text"
             value={logradouro}
             onChange={handlerChangeState}
           />
         </FormGroup>
-      </ClientsDiv>
-      <ClientsDiv between={true}>
+      </ComponentDiv>
+      <ComponentDiv between={true}>
         <FormGroup>
           <label htmlFor="numero">Número</label>
           <InputText
             required
             id="numero"
-            width="185px"
+            width="200px"
             type="text"
             value={numero}
             onChange={handlerChangeState}
@@ -296,7 +312,7 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
           <InputText
             required
             id="cidade"
-            width="185px"
+            width="200px"
             type="text"
             value={cidade}
             onChange={handlerChangeState}
@@ -307,24 +323,22 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
           <InputText
             required
             id="uf"
-            width="185px"
+            width="200px"
             type="text"
             value={uf}
             onChange={handlerChangeState}
           />
         </FormGroup>
-      </ClientsDiv>
+      </ComponentDiv>
       <GroupButtonFooter>
         <Button type="secondary" onClick={goBack}>
           Voltar
         </Button>
         {clientsReducer.isEditing &&
-          `Cadastrado em: ${moment(
-            clientsReducer.selectedClient.data_criacao
-          ).format("DD/MM/YYYY hh:mm")}`}
+          `Cadastrado em: ${moment(dataCriacao).format("DD/MM/YYYY hh:mm")}`}
         <Button onClick={handlerSave}>Salvar</Button>
       </GroupButtonFooter>
-    </ClientsStyle>
+    </ComponentStyle>
   );
 };
 
