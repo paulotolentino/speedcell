@@ -50,14 +50,12 @@ const SummaryPage: React.SFC<SummaryPageProps> = () => {
   const [totalOS, setTotalOS] = useState(0);
 
   const searchByPeriod = () => {
-    console.log(dateIn);
     axios
       .get(`${globalUrl}/resumo?initialDate=${dateIn}&finalDate=${dateOut}`)
       .then((response) => {
         setSummary(response.data);
       })
       .catch((error) => {
-        console.log(error);
         setSummary({});
       });
     axios
@@ -65,14 +63,12 @@ const SummaryPage: React.SFC<SummaryPageProps> = () => {
         `${globalUrl}/resumoSomas?initialDate=${dateIn}&finalDate=${dateOut}`
       )
       .then((response) => {
-        console.log(response);
         setTotalVendas(
           response.data.sales.valor_cheio - response.data.sales.valor_desconto
         );
         setTotalOS(response.data.sos.valor_cheio);
       })
       .catch((error) => {
-        console.log(error);
         setTotalVendas(0);
       });
   };
@@ -93,7 +89,6 @@ const SummaryPage: React.SFC<SummaryPageProps> = () => {
         setSummary(response.data);
       })
       .catch((error) => {
-        console.log(error);
         setSummary({});
       });
 
@@ -112,7 +107,6 @@ const SummaryPage: React.SFC<SummaryPageProps> = () => {
         setTotalOS(response.data.sos.valor_cheio);
       })
       .catch((error) => {
-        console.log(error);
         setTotalVendas(0);
       });
     // eslint-disable-next-line

@@ -72,7 +72,6 @@ const ServiceOrdersPage: React.SFC<ServiceOrdersProps> = () => {
       })
       .catch((error) => {
         setLoading(false);
-        console.log(error);
         setShowedOrders([]);
         return dispatch({
           data: [],

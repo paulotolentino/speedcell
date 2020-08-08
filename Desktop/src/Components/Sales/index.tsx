@@ -46,7 +46,6 @@ const SalesPage: React.SFC<SalesProps> = () => {
       })
       .catch((error) => {
         setLoading(false);
-        console.log(error);
         setShowedSales([]);
         return dispatch({
           data: [],

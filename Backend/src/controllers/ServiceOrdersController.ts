@@ -80,7 +80,7 @@ class ServiceOrdersController {
 
   async getNumMax(request: Request, response: Response) {
     try {
-      const count = await knex("os").count("* as count").first();
+      const count = await knex("os").max("numero_os as count").first();
 
       if (!count) {
         return response.status(400).json({ message: "Error." });

@@ -43,7 +43,6 @@ const ClientsPage: React.SFC<ClientsProps> = () => {
         // handle error
         setLoading(false);
         setShowedClients([]);
-        console.log(error);
       });
     // eslint-disable-next-line
   }, []);

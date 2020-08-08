@@ -326,7 +326,6 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
 
   const handlerSave = async () => {
     if (0 === value) {
-      console.log("Value cannot be zero");
       Swal.fire({
         icon: "warning",
         title: "O valor da OS não pode ser ZERO",
@@ -361,7 +360,6 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
 
     if (pay || status !== "Em andamento") {
       const payment = pay !== "3" ? inputOptions[Number(pay)] : "Não pago";
-      console.log(payment);
       const { value: valor } =
         payment === "Dinheiro"
           ? await Swal.fire({
@@ -387,7 +385,6 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
           : { value: value };
 
       if (valor || valor === 0) {
-        console.log(valor);
         if (Number(valor) < value) {
           Swal.fire({
             icon: "error",
@@ -428,7 +425,6 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
                 forma_pagamento: payment,
               },
             };
-        console.log(dataToSend);
 
         if (osReducer.isShowing) {
           axios

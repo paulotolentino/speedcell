@@ -65,7 +65,6 @@ const StoragePage: React.SFC<StorageProps> = () => {
         // handle error
         setLoading(false);
         setShowedProds([]);
-        console.log(error);
       });
     // eslint-disable-next-line
   }, []);
