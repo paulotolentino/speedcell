@@ -29,14 +29,26 @@
     "sweetalert2": "^9.17.0",
     "typescript": "^3.9.5"
   },
+  "build": {
+    "appId": "com.dex.app",
+    "productName": "Cargill_DEX",
+    "win": {
+      "target": [
+        "dir"
+      ],
+      "icon": "public\\icon.ico"
+    }
+  },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "dev": "concurrently \"yarn start\" \"wait-on http://localhost:3000 && electron .\"",
-    "package": "yarn build && electron-builder build --win --x64",
-    "knex:migrate": "knex --knexfile knexFile.ts migrate:latest"
+    "knex:migrate": "knex --knexfile knexFile.ts migrate:latest",
+    "package": "yarn build && electron-builder && copy .\\public\\icon.ico .\\dist.\\win-unpacked && copy .\\public\\tray.ico .\\dist.\\win-unpacked",
+    "package-linux": "yarn build && electron-builder build --linux",
+    "package-win": "yarn build && electron-builder build --win --x64"
   },
   "eslintConfig": {
     "extends": "react-app"

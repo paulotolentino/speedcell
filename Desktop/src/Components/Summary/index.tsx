@@ -66,10 +66,11 @@ const SummaryPage: React.SFC<SummaryPageProps> = () => {
         setTotalVendas(
           response.data.sales.valor_cheio - response.data.sales.valor_desconto
         );
-        setTotalOS(response.data.sos.valor_cheio);
+        setTotalOS(response.data.sos.valor_cheio || 0);
       })
       .catch((error) => {
         setTotalVendas(0);
+        setTotalOS(0);
       });
   };
 
@@ -104,10 +105,11 @@ const SummaryPage: React.SFC<SummaryPageProps> = () => {
         setTotalVendas(
           response.data.sales.valor_cheio - response.data.sales.valor_desconto
         );
-        setTotalOS(response.data.sos.valor_cheio);
+        setTotalOS(response.data.sos.valor_cheio || 0);
       })
       .catch((error) => {
         setTotalVendas(0);
+        setTotalOS(0);
       });
     // eslint-disable-next-line
   }, []);
