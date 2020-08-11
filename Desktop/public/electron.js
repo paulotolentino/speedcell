@@ -15,6 +15,8 @@ function createWindow() {
     height: 705,
     frame: false,
     resizable: false,
+    title: "VOEC - TechBox",
+    titleBarStyle: "VOEC - TechBox",
     icon: isDev ? "public/icon.ico" : "icon.ico",
     webPreferences: {
       nodeIntegration: true,
@@ -47,6 +49,12 @@ function createSystemTray() {
       label: "Abrir VOEC",
       click: () => {
         mainWindow.show();
+      },
+    },
+    {
+      label: "Encerrar VOEC",
+      click: () => {
+        app.exit();
       },
     },
   ]);

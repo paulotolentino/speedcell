@@ -44,6 +44,13 @@ const Navbar = () => {
       <NavbarDiv>
         <div>
           <NavbarItem
+            onClick={() => onNavbarSelect("Summary")}
+            isSelected={selectedMenu === "Summary"}
+          >
+            <AttachMoneyOutlinedIcon fontSize="large" />
+            Resumo
+          </NavbarItem>
+          <NavbarItem
             onClick={() => onNavbarSelect("Sales")}
             isSelected={selectedMenu === "Sales" || selectedMenu === "FormSale"}
           >
@@ -74,13 +81,6 @@ const Navbar = () => {
           >
             <FaceOutlinedIcon fontSize="large" />
             Clientes
-          </NavbarItem>
-          <NavbarItem
-            onClick={() => onNavbarSelect("Summary")}
-            isSelected={selectedMenu === "Summary"}
-          >
-            <AttachMoneyOutlinedIcon fontSize="large" />
-            Resumo
           </NavbarItem>
         </div>
       </NavbarDiv>

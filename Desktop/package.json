@@ -30,8 +30,8 @@
     "typescript": "^3.9.5"
   },
   "build": {
-    "appId": "com.dex.app",
-    "productName": "Cargill_DEX",
+    "appId": "com.voec.techboxsys",
+    "productName": "Techbox_VOEC",
     "win": {
       "target": [
         "dir"
@@ -41,7 +41,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "dev": "concurrently \"yarn start\" \"wait-on http://localhost:3000 && electron .\"",
