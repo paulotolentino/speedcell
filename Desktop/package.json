@@ -36,7 +36,7 @@
       "target": [
         "dir"
       ],
-      "icon": "public\\icon.ico"
+      "icon": "public\\icon.png"
     }
   },
   "scripts": {
