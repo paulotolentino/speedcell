@@ -1,4 +1,6 @@
 import * as actionTypes from "../Actions";
+import moment from "moment";
+import { getCurrentISODate } from "../../Utils/CommonFunctions";
 
 export interface ServiceOrderTableInterface {
   id: number;
@@ -41,6 +43,7 @@ interface State {
     idSelectedOs: number;
     isShowing: boolean;
   };
+  date: string;
 }
 
 export const initialState: State = {
@@ -50,6 +53,7 @@ export const initialState: State = {
     idSelectedOs: 0,
     isShowing: false,
   },
+  date: moment(getCurrentISODate(new Date())).format("YYYY-MM-DD"),
 };
 
 const ServiceOrdersReducer = (state: State = initialState, action: any) => {
@@ -86,6 +90,16 @@ const ServiceOrdersReducer = (state: State = initialState, action: any) => {
           isShowing: action.data,
         },
       } as State;
+    case actionTypes.SET_DATE_OS:
+      return {
+        ...state,
+        date: action.data,
+      } as State;
+    case actionTypes.SET_INITIAL_OS_PERIOD:
+      return {
+        ...state,
+        date: moment(getCurrentISODate(new Date())).format("YYYY-MM-DD"),
+      };
     default:
       return state;
   }

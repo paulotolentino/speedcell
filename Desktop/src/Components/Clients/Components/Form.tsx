@@ -16,6 +16,7 @@ import {
   Title,
 } from "../../Global";
 import { globalUrl } from "../../../Utils/GlobalURL";
+import Swal from "sweetalert2";
 
 interface ClientRegisterProps {}
 
@@ -24,6 +25,7 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
   const dispatch = useDispatch();
   const clientsReducer = useSelector((state) => state.ClientsReducer.data);
   const cpfSale = useSelector((state) => state.SalesReducer.data.cpfSale);
+  const cpfOs = useSelector((state) => state.ServiceOrdersReducer.data.cpfOs);
 
   const [nome, setNome] = useState<string>("");
   const [cpf, setCPF] = useState<string>("");
@@ -38,6 +40,14 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
 
   useEffect(() => {
     if (clientsReducer.isEditing) {
+      dispatch({
+        data: 0,
+        type: actions.SET_CPF_SALE,
+      });
+      dispatch({
+        data: 0,
+        type: actions.SET_CPF_SERVICE_ORDERS,
+      });
       axios
         .get(`${globalUrl}/clientes/${clientsReducer.selectedClientId}`)
         .then(function ({ data }) {
@@ -54,7 +64,7 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
           setDataCriacao(data.data_criacao);
           dispatch({
             data: data,
-            type: actions.SET_CLIENTS,
+            type: actions.SET_CLIENT,
           });
         })
         .catch(function (error) {
@@ -64,6 +74,9 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
         });
     } else if (cpfSale > 0) {
       setCPF(cpfSale.toString());
+    } else if (cpfOs > 0) {
+      setCPF(cpfOs.toString());
+    } else {
     }
 
     return () => {
@@ -76,10 +89,14 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
       setUF("");
       setTelefone("");
       setEmail("");
-      dispatch({
-        data: 0,
-        type: actions.SET_CPF_SALE,
-      });
+      // dispatch({
+      //   data: mantemCPF ? cpfSale : 0,
+      //   type: actions.SET_CPF_SALE,
+      // });
+      // dispatch({
+      //   data: mantemCPF ? cpfOs : 0,
+      //   type: actions.SET_CPF_SERVICE_ORDERS,
+      // });
     };
 
     // eslint-disable-next-line
@@ -189,12 +206,22 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
         .then(function (response) {
           // handle success
           if (response.status === 200 && response.data.message === "success") {
-            goBack();
+            showMessage({
+              title: "Sucesso",
+              text: "Cliente editado com sucesso",
+              type: "success",
+              status: true,
+            });
           }
         })
         .catch(function (error) {
           // handle error
-          alert(error);
+          showMessage({
+            title: "Um erro ocorreu. Verifique os dados inseridos.",
+            text: error,
+            type: "error",
+            status: false,
+          });
           console.log(error);
         });
     } else {
@@ -203,17 +230,51 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
         .then(function (response) {
           // handle success
           if (response.status === 200 && response.data.message === "success") {
-            goBack();
+            showMessage({
+              title: "Sucesso",
+              text: "Cliente cadastrado com sucesso",
+              type: "success",
+              status: true,
+            });
           }
         })
         .catch(function (error) {
           // handle error
-          alert(
-            "Um erro ocorreu. Verifique os dados inseridos.\nAtenção: CPF não pode repetir."
-          );
+          showMessage({
+            title: "Atenção. Verifique os dados inseridos.",
+            text: "Atenção: CPF e email não podem repetir.",
+            type: "warning",
+            status: false,
+          });
           console.log(error);
         });
     }
+  };
+
+  const showMessage = ({
+    title,
+    text,
+    type,
+    status,
+  }: {
+    title: string;
+    text: string;
+    type: "success" | "error" | "warning" | "info" | "question";
+    status: boolean;
+  }) => {
+    Swal.fire(title, text, type).then(() => {
+      if (status) {
+        if (cpfSale > 0)
+          history.push({
+            pathname: `/FormSale`,
+          });
+        else if (cpfOs > 0)
+          history.push({
+            pathname: `/FormOs`,
+          });
+        else goBack();
+      }
+    });
   };
 
   const goBack = () => history.goBack();
@@ -331,7 +392,14 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
         </FormGroup>
       </ComponentDiv>
       <GroupButtonFooter>
-        <Button type="secondary" onClick={goBack}>
+        <Button
+          type="secondary"
+          onClick={() =>
+            history.push({
+              pathname: `/OSs`,
+            })
+          }
+        >
           Voltar
         </Button>
         {clientsReducer.isEditing &&

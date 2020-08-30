@@ -149,3 +149,27 @@ export const PrintableArea = styled.div`
 export const TextAreaOS = styled.textarea`
   font-family: Roboto-Medium, sans-serif;
 `;
+
+export const PINArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 18%;
+  height: 120px;
+`;
+
+export const PINRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+`;
+
+export const PIN = styled.div`
+  width: 14px;
+  height: 14px;
+  border-radius: 7px;
+  background-color: black;
+`;

@@ -24,44 +24,41 @@ interface ServiceOrdersProps {}
 const ServiceOrdersPage: React.SFC<ServiceOrdersProps> = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const orders = useSelector(
-    (state) => state.ServiceOrdersReducer.data.serviceOrders
-  );
+  const { date } = useSelector((state) => state.ServiceOrdersReducer);
   const [loading, setLoading] = useState(true);
+  const [searchValue, setSearchValue] = useState("");
   const [showedOrders, setShowedOrders] = useState<
     Array<ServiceOrderTableInterface>
   >([]);
 
-  const handleSearch = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value;
-    const ordersServ = [...orders];
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSearchValue(event.target.value);
+  };
 
-    setShowedOrders(
-      ordersServ.filter((order) =>
-        Object.values(order).some((paramOrder) => {
-          return String(paramOrder)
-            .toLocaleLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .includes(
-              value
-                .toLocaleLowerCase()
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .replace(",", ".")
-            );
-        })
-      )
-    );
+  const handleSearch = () => {
+    axios
+      .get(`${globalUrl}/buscaos?number=${searchValue}`)
+      .then((response) => {
+        setLoading(false);
+        setShowedOrders(response.data);
+        return dispatch({
+          data: response.data,
+          type: actions.SET_SERVICE_ORDERS,
+        });
+      })
+      .catch((error) => {
+        setLoading(false);
+        setShowedOrders([]);
+        return dispatch({
+          data: [],
+          type: actions.SET_SERVICE_ORDERS,
+        });
+      });
   };
 
   useEffect(() => {
-    const date = new Date();
-    const dateString = `${date.getFullYear()}-${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
     axios
-      .get(`${globalUrl}/os?initialDate=${dateString}&finalDate=${dateString}`)
+      .get(`${globalUrl}/os?initialDate=${date}&finalDate=${date}`)
       .then((response) => {
         setLoading(false);
         setShowedOrders(response.data);
@@ -79,7 +76,7 @@ const ServiceOrdersPage: React.SFC<ServiceOrdersProps> = () => {
         });
       });
     // eslint-disable-next-line
-  }, []);
+  }, [date]);
 
   const searchValidCPF = (cpf: number) =>
     axios
@@ -161,7 +158,11 @@ const ServiceOrdersPage: React.SFC<ServiceOrdersProps> = () => {
     <ComponentStyle>
       <Title>Ordens de Serviço</Title>
       <ComponentHeader>
-        <InputSearch type="text" onChange={handleSearch} />
+        <InputSearch type="text" onChange={handleChange} />
+        {/* <InputDate date={date} action={actions.SET_DATE_OS} /> */}
+        <NewServiceOrderButton onClick={handleSearch}>
+          Buscar
+        </NewServiceOrderButton>
         <NewServiceOrderButton onClick={insertCPF}>
           Nova Os
         </NewServiceOrderButton>

@@ -21,6 +21,7 @@ routes.delete("/vendas/", salesController.delete);
 // routes.delete("/vendas/:id", salesController.deleteOne);
 
 routes.get("/os", soControllers.index);
+routes.get("/buscaos", soControllers.search);
 routes.get("/os/:id", soControllers.show);
 routes.get("/getos/numero", soControllers.getNumMax);
 routes.post("/os", soControllers.create);

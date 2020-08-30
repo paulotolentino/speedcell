@@ -268,10 +268,11 @@ const SaleRegisterForm: React.SFC<SaleRegisterProps> = () => {
                 response.status === 200 &&
                 response.data.message === "success"
               ) {
+                console.log(Number(pay) === 2);
                 Swal.fire({
                   icon: "success",
                   title: `Venda realizada.${
-                    pay === 3
+                    Number(pay) === 2
                       ? ` \n Troco: R$ ${(Number(value) - (total - desconto))
                           .toFixed(2)
                           .toString()
@@ -473,7 +474,7 @@ const SaleRegisterForm: React.SFC<SaleRegisterProps> = () => {
             disabled={produtos.length === 0}
             onClick={produtos.length > 0 ? handlerSave : () => {}}
           >
-            Salvar
+            Finalizar venda
           </Button>
         ) : (
           <div />

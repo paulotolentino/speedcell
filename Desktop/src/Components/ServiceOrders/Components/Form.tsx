@@ -4,7 +4,7 @@ import { useSelector } from "../../../Redux/Store";
 import { useDispatch } from "react-redux";
 import * as actions from "../../../Redux/Actions";
 import axios from "axios";
-// import moment from "moment";
+import moment from "moment";
 import Swal from "sweetalert2";
 import { toMoney, getCurrentISODate } from "../../../Utils/CommonFunctions";
 import { ComponentStyle, Button, GroupButtonFooter } from "../../Global";
@@ -33,15 +33,18 @@ import {
   SignClient,
   PrintableArea,
   TextAreaOS,
+  PINArea,
+  PINRow,
+  PIN,
 } from "./Form_style";
 import { globalUrl } from "../../../Utils/GlobalURL";
 import SpeedCell from "../../../Assets/logo/marca.png";
 import { useReactToPrint } from "react-to-print";
 import { Colors } from "../../Colors";
 
-interface ClientRegisterProps {}
+interface OSRegisterProps {}
 
-const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
+const OSRegisterForm: React.SFC<OSRegisterProps> = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const osReducer = useSelector((state) => state.ServiceOrdersReducer.data);
@@ -83,11 +86,11 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
     "Garantia de 30 dias"
   );
   const [observations, setObservations] = useState<string>("");
-  // const [incomeDate, setIncomeDate] = useState<string>(
-  //   getCurrentISODate(new Date())
-  // );
+  const [incomeDate, setIncomeDate] = useState<string>(
+    moment(new Date()).format("DD/MM/YYYY")
+  );
   const [outcomeDate, setOutcomeDate] = useState<string>(
-    getCurrentISODate(new Date())
+    moment(new Date()).format("DD/MM/YYYY")
   );
   const [value, setValue] = useState<number>(0);
   const [status, setStatus] = useState<string>("Em andamento");
@@ -112,7 +115,9 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
           setTechnicalReport(data.laudo_tecnico);
           setWarrantyTerm(data.termo_garantia);
           setObservations(data.observacoes);
-          // setIncomeDate(getCurrentISODate(new Date(data.data_entrada)));
+          setIncomeDate(
+            moment(new Date(data.data_entrada)).format("DD/MM/YYYY")
+          );
           setOutcomeDate(getCurrentISODate(new Date(data.data_saida)));
           setValue(data.valor);
           setStatus(data.status);
@@ -435,7 +440,23 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
                 response.status === 200 &&
                 response.data.message === "success"
               ) {
-                goBack();
+                Swal.fire({
+                  icon: "success",
+                  title: `OS finalizada.${
+                    Number(pay) === 2
+                      ? ` \n Troco: R$ ${(Number(valor) - value)
+                          .toFixed(2)
+                          .toString()
+                          .replace(".", ",")}`
+                      : ""
+                  }`,
+                  confirmButtonColor: Colors.Brand.BrandPrimary,
+                }).then(() => {
+                  if (handlePrint) {
+                    handlePrint();
+                  }
+                  goBack();
+                });
               }
             })
             .catch(function (error) {
@@ -452,10 +473,16 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
                 response.status === 200 &&
                 response.data.message === "success"
               ) {
-                if (handlePrint) {
-                  handlePrint();
-                }
-                goBack();
+                Swal.fire({
+                  icon: "success",
+                  title: `OS gerada.`,
+                  confirmButtonColor: Colors.Brand.BrandPrimary,
+                }).then(() => {
+                  if (handlePrint) {
+                    handlePrint();
+                  }
+                  goBack();
+                });
               }
             })
             .catch(function (error) {
@@ -483,19 +510,20 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
               <CompanyLogoAndName>
                 <Logo src={SpeedCell} alt="Logo" />
                 <CompanyInfos>
-                  <CompanyName>Nome da Empresa</CompanyName>
-                  <span>CNPJ: 60.478.005/0001-56</span>
+                  <CompanyName>Speed Cell Assistência Técnica</CompanyName>
+                  <span>CNPJ: </span>
                   <span>
-                    Rua 21 de Abril, 10 (Loja 01) - Brás - São Paulo/SP
+                    Rua Capitão João Rodrigues Santiago, 127 - Satélite Íris 4 -
+                    Campinas/SP
                   </span>
                 </CompanyInfos>
               </CompanyLogoAndName>
               <CompanyContact>
                 <CompanyInfosContact>
-                  <BoldSpan>(31) 3333-9999 - (31) 99999-8888</BoldSpan>
-                  <BoldSpan>contato@minhaempresa.com.br</BoldSpan>
+                  <BoldSpan>(19) 98771-7980</BoldSpan>
+                  <BoldSpan>speedcellassistenciatecnica@gmail.com</BoldSpan>
                   <BoldSpan>
-                    <NotBoldSpan>Responsável:</NotBoldSpan> João da Silva
+                    <NotBoldSpan>Responsável:</NotBoldSpan> Diego Gomes
                   </BoldSpan>
                 </CompanyInfosContact>
               </CompanyContact>
@@ -503,7 +531,7 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
             <ServiceOrderNumberAndDate>
               <NumberAndDate>{status.toLocaleUpperCase()}</NumberAndDate>
               <NumberAndDate>ORDEM DE SERVIÇO Nº {osNumber}</NumberAndDate>
-              <NumberAndDate>31/07/2018</NumberAndDate>
+              <NumberAndDate>{incomeDate}</NumberAndDate>
             </ServiceOrderNumberAndDate>
             <ClientDataHeader>
               <ClientData>DADOS DO CLIENTE</ClientData>
@@ -643,7 +671,7 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
             </ClientDataInfo>
             <SignClient>
               <div>
-                <p>Entrada: 31/07/2020</p>
+                <p>Entrada: {incomeDate}</p>
                 <p>______________________________</p>
                 <p>Assinatura do cliente</p>
               </div>
@@ -652,6 +680,23 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
                 <p>______________________________</p>
                 <p>Assinatura do técnico</p>
               </div>
+              <PINArea>
+                <PINRow>
+                  <PIN />
+                  <PIN />
+                  <PIN />
+                </PINRow>
+                <PINRow>
+                  <PIN />
+                  <PIN />
+                  <PIN />
+                </PINRow>
+                <PINRow>
+                  <PIN />
+                  <PIN />
+                  <PIN />
+                </PINRow>
+              </PINArea>
             </SignClient>
           </PrincipalDiv>
         </PrintableArea>
@@ -662,17 +707,20 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
             <CompanyLogoAndName>
               <Logo src={SpeedCell} alt="Logo" />
               <CompanyInfos>
-                <CompanyName>Nome da Empresa</CompanyName>
-                <span>CNPJ: 60.478.005/0001-56</span>
-                <span>Rua 21 de Abril, 10 (Loja 01) - Brás - São Paulo/SP</span>
+                <CompanyName>Speed Cell Assistência Técnica</CompanyName>
+                <span>CNPJ:</span>
+                <span>
+                  Rua Capitão João Rodrigues Santiago, 127 - Satélite Íris 4 -
+                  Campinas/SP
+                </span>
               </CompanyInfos>
             </CompanyLogoAndName>
             <CompanyContact>
               <CompanyInfosContact>
-                <BoldSpan>(31) 3333-9999 - (31) 99999-8888</BoldSpan>
-                <BoldSpan>contato@minhaempresa.com.br</BoldSpan>
+                <BoldSpan>(19) 98771-7980</BoldSpan>
+                <BoldSpan>speedcellassistenciatecnica@gmail.com</BoldSpan>
                 <BoldSpan>
-                  <NotBoldSpan>Responsável:</NotBoldSpan> João da Silva
+                  <NotBoldSpan>Responsável:</NotBoldSpan> Diego Gomes
                 </BoldSpan>
               </CompanyInfosContact>
             </CompanyContact>
@@ -684,7 +732,7 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
               </NumberAndDate>
             </button>
             <NumberAndDate>ORDEM DE SERVIÇO Nº {osNumber}</NumberAndDate>
-            <NumberAndDate>31/07/2018</NumberAndDate>
+            <NumberAndDate>{incomeDate}</NumberAndDate>
           </ServiceOrderNumberAndDate>
           <ClientDataHeader>
             <ClientData>DADOS DO CLIENTE</ClientData>
@@ -901,13 +949,15 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
         <Button type="secondary" onClick={goBack}>
           Voltar
         </Button>
-        <Button type="info" onClick={handlePrint}>
+        {/* <Button type="info" onClick={handlePrint}>
           Imprimir
+        </Button> */}
+        <Button onClick={handlerSave}>
+          {osReducer.isShowing ? "Finalizar" : "Gerar"} OS
         </Button>
-        <Button onClick={handlerSave}>Salvar</Button>
       </GroupButtonFooter>
     </ComponentStyle>
   );
 };
 
-export default ClientRegisterForm;
+export default OSRegisterForm;

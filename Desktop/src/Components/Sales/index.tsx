@@ -17,6 +17,7 @@ import {
   NewSomethingButton as NewSaleButton,
 } from "../Global";
 import { Colors } from "../Colors";
+import InputDate from "./Components/InputDate";
 
 interface SalesProps {}
 
@@ -24,18 +25,13 @@ const SalesPage: React.SFC<SalesProps> = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const reducer = useSelector((state) => state.SalesReducer.data);
+  const { date } = useSelector((state) => state.SalesReducer);
   const [loading, setLoading] = useState(true);
   const [showedSales, setShowedSales] = useState<Array<SaleProps>>([]);
 
   useEffect(() => {
-    const date = new Date();
-    const dateString = `${date.getFullYear()}-${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
     axios
-      .get(
-        `${globalUrl}/vendas?initialDate=${dateString}&finalDate=${dateString}`
-      )
+      .get(`${globalUrl}/vendas?initialDate=${date}&finalDate=${date}`)
       .then((response) => {
         setLoading(false);
         setShowedSales(response.data);
@@ -53,7 +49,7 @@ const SalesPage: React.SFC<SalesProps> = () => {
         });
       });
     // eslint-disable-next-line
-  }, []);
+  }, [date]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
@@ -189,6 +185,7 @@ const SalesPage: React.SFC<SalesProps> = () => {
       <Title>Vendas</Title>
       <ComponentHeader>
         <InputSearch type="text" onChange={handleSearch} />
+        <InputDate date={date} action={actions.SET_DATE_SALE} />
         <NewSaleButton onClick={wantCPF}>Nova venda</NewSaleButton>
       </ComponentHeader>
       {showedSales.length > 0 ? (

@@ -1,4 +1,6 @@
 import * as actionTypes from "../Actions";
+import moment from "moment";
+import { getCurrentISODate } from "../../Utils/CommonFunctions";
 export interface SaleProps {
   id: number;
   numero_venda: number;
@@ -29,6 +31,7 @@ interface State {
     cpfSale: number;
     isShowing: boolean;
   };
+  date: string;
 }
 
 export const initialState: State = {
@@ -38,6 +41,7 @@ export const initialState: State = {
     cpfSale: 0,
     isShowing: false,
   },
+  date: moment(getCurrentISODate(new Date())).format("YYYY-MM-DD"),
 };
 
 const SalesReducer = (state: State = initialState, action: any) => {
@@ -74,6 +78,16 @@ const SalesReducer = (state: State = initialState, action: any) => {
           isShowing: action.data,
         },
       } as State;
+    case actionTypes.SET_DATE_SALE:
+      return {
+        ...state,
+        date: action.data,
+      } as State;
+    case actionTypes.SET_INITIAL_SALE_PERIOD:
+      return {
+        ...state,
+        date: moment(getCurrentISODate(new Date())).format("YYYY-MM-DD"),
+      };
     default:
       return state;
   }

@@ -58,6 +58,27 @@ class ServiceOrdersController {
     }
   }
 
+  async search(request: Request, response: Response) {
+    try {
+      const { number } = request.query;
+
+      const sos: Array<ServiceOrderClientFromDB> = await knex("os")
+        .join("cliente", "os.id_cliente", "=", "cliente.id")
+        .select("os.*", "cliente.nome", "cliente.cpf", "cliente.cep")
+        .where("os.numero_os", "=", `${number}`)
+        .orderBy("os.data_entrada")
+        .groupBy("os.data_entrada");
+
+      if (sos.length === 0) {
+        return response.status(404).json({ message: "SO's not found." });
+      }
+
+      return response.json(sos);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   async show(request: Request, response: Response) {
     try {
       const { id } = request.params;

@@ -75,11 +75,19 @@ const ClientsPage: React.SFC<ClientsProps> = () => {
       <ComponentHeader>
         <InputText type="text" onChange={handleSearch} />
         <Button
-          onClick={() =>
+          onClick={() => {
+            dispatch({
+              data: 0,
+              type: actions.SET_CPF_SALE,
+            });
+            dispatch({
+              data: 0,
+              type: actions.SET_CPF_SERVICE_ORDERS,
+            });
             history.push({
               pathname: `/FormClient`,
-            })
-          }
+            });
+          }}
         >
           Cadastrar Cliente
         </Button>

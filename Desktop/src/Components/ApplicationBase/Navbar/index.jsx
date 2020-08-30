@@ -30,8 +30,8 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    setSelectedMenu("Summary");
-    onNavbarSelect("Summary");
+    setSelectedMenu("Clients");
+    onNavbarSelect("Clients");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
