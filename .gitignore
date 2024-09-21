@@ -3,3 +3,5 @@ Desktop/node_modules
 Desktop/dist
 **/*.DS_Store
 dist.zip
+build
+dist
