@@ -1,44 +1,57 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Techbox Systems - Aplicação Desktop VOEC
 
-## Available Scripts
+## Descrição
 
-In the project directory, you can run:
+Esta é a aplicação desktop do sistema **Techbox Systems - VOEC**, desenvolvida com **Electron.js**. A aplicação foi projetada para rodar com **Node 16** obrigatoriamente e utiliza **Yarn** como gerenciador de dependências.
 
-### `yarn start`
+## Pré-requisitos
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **Node.js** versão 16.x (não compatível com versões anteriores ou posteriores)
+- **Yarn** como gerenciador de dependências
+- **Windows** como ambiente de execução
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Comandos
 
-### `yarn test`
+- **Instalar dependências:**
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+  ```bash
+  yarn
+  ```
 
-### `yarn build`
+- **Rodar o ambiente de desenvolvimento:**
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  ```bash
+  yarn run dev
+  ```
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+- **Gerar o pacote da aplicação desktop:**
+  ```bash
+  yarn run package
+  ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Instalação na Máquina do Cliente
 
-### `yarn eject`
+Após gerar o pacote com `yarn run package`, siga os passos abaixo para instalar e configurar a aplicação na máquina do cliente:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+1. **Copiar os arquivos da aplicação**:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   - Copie todo o conteúdo gerado para a máquina do cliente. Geralmente, o pacote estará na pasta `dist/` ou em uma pasta gerada pelo Electron após o comando de `package`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+2. **Copiar a pasta `/build/static`**:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+   - A pasta `/build/static` deve ser copiada para o diretório `C:/` do cliente. Este diretório pode ser necessário para armazenar arquivos estáticos utilizados pela aplicação.
 
-## Learn More
+3. **Criar Atalhos**:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   - Crie um atalho da aplicação na **Área de Trabalho** do cliente.
+   - Adicione o atalho também no **Menu Iniciar** para facilitar o acesso do usuário.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+4. **Testar a Aplicação**:
+   - Após configurar os atalhos, execute a aplicação na máquina do cliente para garantir que tudo está funcionando corretamente.
+
+---
+
+## Notas
+
+- Certifique-se de que a versão do **Node.js** na máquina do cliente seja exatamente a versão 16.x, pois o funcionamento da aplicação depende dessa versão.
+- Teste a aplicação após configurar os atalhos e verificar que os arquivos foram copiados corretamente.
