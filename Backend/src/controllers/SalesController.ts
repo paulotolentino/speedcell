@@ -42,8 +42,8 @@ class SalesController {
       const { initialDate, finalDate } = request.query;
 
       const sales: Array<SaleFromDB> = await knex("venda")
-        .join("cliente", "venda.id_cliente", "=", "cliente.id")
         .join("produto_venda", "venda.id", "=", "produto_venda.id_venda")
+        .leftJoin("cliente", "venda.id_cliente", "=", "cliente.id")
         .select(
           "venda.id",
           "venda.numero_venda",
@@ -66,7 +66,7 @@ class SalesController {
 
       const newSales = sales.map((sale) => {
         let val = sale.valor;
-        delete sale.valor;
+        // delete sale.valor;
         return { ...sale, valor_descontado: val - sale.valor_desconto };
       });
 
