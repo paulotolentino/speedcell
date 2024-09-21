@@ -103,11 +103,14 @@ const ClientRegisterForm: React.SFC<ClientRegisterProps> = () => {
   }, []);
 
   const searchCEP = (cep: string) => {
+    // https://viacep.com.br/ws/01001000/json/
     axios
-      .get(`http://cep.la/${cep}`, { headers: { Accept: "application/json" } })
+      .get(`https://viacep.com.br/ws/${cep}/json/`, {
+        headers: { Accept: "application/json" },
+      })
       .then((res) => {
         const data = res.data;
-        setCidade(data.cidade);
+        setCidade(data.localidade);
         setUF(data.uf);
         setLogradouro(data.logradouro);
       })

@@ -70,12 +70,12 @@ const SaleRegisterForm: React.SFC<SaleRegisterProps> = () => {
         .get(`${globalUrl}/vendas/${salesReducer.idSelectedSale}`)
         .then(function ({ data }) {
           // handle success
-          setIdCliente(data.sale.id_cliente);
-          setNomeCliente(data.sale.nome);
-          setCEP(data.sale.cep.toString());
-          setCPF(data.sale.cpf.toString());
+          setIdCliente(data.sale?.id_cliente);
+          setNomeCliente(data.sale?.nome);
+          setCEP(data.sale.cep?.toString());
+          setCPF(data.sale.cpf?.toString());
           setDesconto(data.sale.valor_desconto);
-          setnVenda(data.sale.numero_venda.toString());
+          setnVenda(data.sale.numero_venda?.toString());
           setData(new Date(data.sale.data));
           setProdutos(data.items);
           setTotal(
@@ -94,9 +94,9 @@ const SaleRegisterForm: React.SFC<SaleRegisterProps> = () => {
         .get(`${globalUrl}/clientes/cpf/${cpfSale > 0 ? cpfSale : "0"}`)
         .then(function ({ data }) {
           // handle success
-          setIdCliente(data.id.toString());
+          setIdCliente(data.id?.toString());
           setNomeCliente(data.nome);
-          setCEP(data.cep.toString());
+          setCEP(data.cep?.toString());
           setCPF(cpfSale > 0 ? data.cpf.toString() : "00000000000");
           setProdutos([]);
           // setData(new Date());
@@ -236,8 +236,7 @@ const SaleRegisterForm: React.SFC<SaleRegisterProps> = () => {
           Swal.fire({
             icon: "error",
             title: "Pagamento não realizado.",
-            text:
-              "O valor do pagamento não pode ser menor do que o valor total.",
+            text: "O valor do pagamento não pode ser menor do que o valor total.",
             confirmButtonColor: Colors.Brand.BrandPrimary,
           });
           return;
@@ -326,8 +325,7 @@ const SaleRegisterForm: React.SFC<SaleRegisterProps> = () => {
           Swal.fire({
             icon: "warning",
             title: "Estoque insuficiente",
-            text:
-              "A quantidade inserida é maior do que a quantidade disponível.",
+            text: "A quantidade inserida é maior do que a quantidade disponível.",
             confirmButtonColor: Colors.Brand.BrandPrimary,
           });
         }
